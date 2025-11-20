@@ -1,0 +1,5 @@
+{
+  "name": "Kalkulator Pajak Pro",
+  "description": "A comprehensive, professional Indonesian tax calculator (PPh 21, 23, PPN, etc.) enhanced with Gemini AI for personalized tax insights.",
+  "requestFramePermissions": []
+}

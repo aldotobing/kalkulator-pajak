@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator Pajak Pro Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+            },
+            colors: {
+              pajak: {
+                50: '#f0f9ff',
+                100: '#e0f2fe',
+                500: '#0ea5e9',
+                600: '#0284c7',
+                900: '#0c4a6e',
+              },
+            },
+            animation: {
+              'blob': 'blob 10s infinite', /* Slowed down from 7s */
+              'fade-up': 'fadeUp 0.5s ease-out forwards',
+              'enter': 'enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards', /* Faster, simplified bezier */
+            },
+            keyframes: {
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              },
+              fadeUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              enter: {
+                '0%': { opacity: '0', transform: 'translateY(8px)' }, /* Removed scale, reduced distance */
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #FAFAFA;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      /* Glassmorphism utilities */
+      .glass {
+        background: rgba(255, 255, 255, 0.8); /* Slightly more opaque to reduce background noise interference */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+      .glass-dark {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+      }
+
+      /* PRINT STYLES */
+      .print-only {
+        display: none;
+      }
+
+      @media print {
+        @page {
+          margin: 2cm;
+          size: A4;
+        }
+        
+        body {
+          background-color: white !important;
+          color: black !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .no-print {
+          display: none !important;
+        }
+
+        .print-only {
+          display: block !important;
+        }
+
+        /* If a modal is open, hide everything else and maximize modal */
+        body:has(.modal-container) > *:not(.modal-container) {
+           display: none !important;
+        }
+        
+        body:has(.modal-container) .modal-container {
+           position: absolute !important;
+           inset: 0 !important;
+           padding: 0 !important;
+           background: white !important;
+           z-index: 9999 !important;
+           display: block !important;
+           overflow: visible !important;
+        }
+
+        body:has(.modal-container) .receipt-modal {
+           box-shadow: none !important;
+           max-width: 100% !important;
+           width: 100% !important;
+           max-height: none !important;
+           height: auto !important;
+           border: none !important;
+           margin: 0 !important;
+           padding: 0 !important;
+           overflow: visible !important;
+           background: white !important;
+        }
+        
+        /* Modal Scrollable Content Reset for Print */
+        body:has(.modal-container) .receipt-modal > div {
+           overflow: visible !important;
+           max-height: none !important;
+           padding: 0 !important;
+        }
+
+        /* Reset Cards for Print */
+        .bg-white, .bg-slate-50, .glass, .glass-dark {
+          background: white !important;
+          border: none !important;
+          box-shadow: none !important;
+        }
+
+        /* Force Text Colors */
+        .text-white, .text-slate-200, .text-slate-300, .text-slate-400 {
+          color: black !important;
+        }
+        
+        .text-indigo-200 {
+          color: #4f46e5 !important; /* Keep some branding color for emphasis */
+        }
+
+        /* Dark Card Inversion */
+        .bg-slate-900, .bg-[#0f172a] {
+          background: white !important;
+          color: black !important;
+          border: 1px solid #e2e8f0 !important;
+        }
+
+        /* Inputs */
+        input, select {
+          border: none !important;
+          background: transparent !important;
+          padding: 0 !important;
+          font-weight: bold !important;
+          font-size: 14px !important;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+        }
+
+        /* Layout Adjustments */
+        .grid {
+          display: block !important;
+        }
+        
+        .lg\:col-span-7, .lg\:col-span-5 {
+          width: 100% !important;
+          margin-bottom: 20px !important;
+        }
+        
+        /* Ensure grid columns in modal stack or stay side-by-side depending on space */
+        .md\:grid-cols-2 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 2rem !important;
+        }
+
+        /* Typography */
+        h2 { font-size: 24px !important; margin-bottom: 10px !important; }
+        h3 { font-size: 18px !important; margin-bottom: 8px !important; }
+        p { font-size: 12px !important; }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
