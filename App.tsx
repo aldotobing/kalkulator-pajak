@@ -14,7 +14,8 @@ import {
   Briefcase,
   Banknote,
   Ship,
-  ChevronDown
+  ChevronDown,
+  PenTool
 } from './components/Icons';
 import CalculatorPPH21 from './components/CalculatorPPH21';
 import CalculatorPPH23 from './components/CalculatorPPH23';
@@ -22,15 +23,18 @@ import CalculatorFinal from './components/CalculatorFinal';
 import CalculatorPPN from './components/CalculatorPPN';
 import CalculatorPPNBM from './components/CalculatorPPNBM';
 import CalculatorBeaCukai from './components/CalculatorBeaCukai';
+import CalculatorNPPN from './components/CalculatorNPPN';
 import FAQPage from './components/FAQPage';
 import HistoryPage from './components/HistoryPage';
 import TaxCalendar from './components/TaxCalendar';
 import { AIWidget } from './components/AIWidget';
+import { SplashScreen } from './components/SplashScreen';
 
 // Type for Active Tab
-type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'CALENDAR' | 'FAQ' | 'HISTORY';
+type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'CALENDAR' | 'FAQ' | 'HISTORY';
 
 const App: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true); // Splash Screen State
   const [activeTab, setActiveTab] = useState<Tab>('PPH21');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
@@ -66,6 +70,7 @@ const App: React.FC = () => {
 
   const tabs = [
     { id: 'PPH21', label: 'PPh 21', fullLabel: 'Karyawan & Pribadi', icon: <Briefcase size={18} /> },
+    { id: 'NPPN', label: 'Freelancer', fullLabel: 'Pekerja Bebas (Norma)', icon: <PenTool size={18} /> },
     { id: 'PPH23', label: 'PPh 23', fullLabel: 'Jasa, Dividen, Royalti', icon: <Building2 size={18} /> },
     { id: 'FINAL', label: 'PPh Final', fullLabel: 'Sewa Tanah & UMKM', icon: <Banknote size={18} /> },
     { id: 'PPN', label: 'PPN', fullLabel: 'Pajak Pertambahan Nilai', icon: <Percent size={18} /> },
@@ -108,7 +113,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans text-slate-900 relative overflow-x-hidden selection:bg-blue-500 selection:text-white">
+    <>
+    {isLoading && <SplashScreen onFinish={() => setIsLoading(false)} />}
+    
+    <div className={`min-h-screen font-sans text-slate-900 relative overflow-x-hidden selection:bg-blue-500 selection:text-white ${isLoading ? 'hidden' : 'block animate-enter'}`}>
       
       {/* Ambient Background - Updated to Blue/Cyan */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden no-print">
@@ -117,109 +125,115 @@ const App: React.FC = () => {
         <div className="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-slate-200/40 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
       </div>
 
-      {/* Floating Navigation */}
-      <div className={`fixed top-6 left-0 right-0 z-50 flex justify-center px-4 no-print transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${showNav ? 'translate-y-0' : '-translate-y-32'}`}>
-        <nav className="glass shadow-2xl shadow-blue-900/5 rounded-full p-2 pl-4 md:pl-6 pr-2 flex items-center gap-2 md:gap-4 max-w-6xl w-full justify-between border border-white/40">
+      {/* Floating Navigation (Liquid Glass Design) */}
+      <div className={`fixed top-6 left-0 right-0 z-50 flex justify-center px-4 no-print transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${showNav ? 'translate-y-0' : '-translate-y-32'}`}>
+        
+        {/* The Crystal Bar */}
+        <nav className="relative flex items-center justify-between p-1.5 gap-3 md:gap-6 max-w-6xl w-full rounded-[2rem] border border-white/40 bg-white/30 backdrop-blur-3xl backdrop-saturate-150 shadow-2xl shadow-blue-900/10 ring-1 ring-white/40 ring-inset">
           
-          {/* Brand */}
-          <div className="flex-shrink-0 cursor-pointer select-none group" onClick={() => setActiveTab('PPH21')}>
-            <span className="text-base md:text-lg font-extrabold tracking-tight bg-gradient-to-r from-slate-900 to-blue-600 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
-              PajakKu Pro
-            </span>
+          {/* Brand - Left */}
+          <div className="flex-shrink-0 cursor-pointer select-none group pl-4 relative z-10" onClick={() => setActiveTab('PPH21')}>
+             <div className="flex items-center gap-2">
+               <span className="text-base md:text-lg font-black tracking-tight text-slate-800 group-hover:opacity-80 transition-opacity">
+                 PajakKu Piro
+               </span>
+             </div>
           </div>
 
-          {/* Desktop Tabs (Visible on Medium screens and up) */}
-          {/* Outer wrapper centers the pill and handles layout flexibility */}
-          <div className="hidden md:flex flex-1 justify-center min-w-0 px-2 lg:px-4">
-            {/* Inner pill handles the visual background, fits content, and scrolls if needed */}
-            <div className="flex items-center bg-slate-100/50 rounded-full p-2 border border-slate-200/50 backdrop-blur-sm overflow-x-auto no-scrollbar max-w-full gap-1">
+          {/* Desktop Tabs - The Liquid Channel */}
+          <div className="hidden md:flex flex-1 justify-center min-w-0 px-2 relative z-10">
+            <div className="flex items-center bg-slate-400/10 rounded-full p-1.5 border border-white/10 shadow-[inset_0_2px_6px_rgba(0,0,0,0.06)] overflow-x-auto slim-scrollbar max-w-full gap-1 backdrop-blur-md">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as Tab)}
-                  className={`px-3 md:px-3 lg:px-4 py-2 rounded-full text-xs md:text-xs lg:text-sm font-semibold transition-all duration-300 flex items-center gap-1.5 lg:gap-2 whitespace-nowrap shrink-0 ${
+                  className={`relative h-10 px-4 rounded-full text-xs md:text-sm font-bold transition-all duration-500 flex items-center justify-center gap-2 whitespace-nowrap shrink-0 ${
                     activeTab === tab.id
-                      ? 'bg-white text-blue-600 shadow-sm shadow-blue-100 ring-1 ring-slate-200/60'
-                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'
+                      ? 'text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4)] shadow-[0_4px_12px_rgba(59,130,246,0.4)]'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/40 border-t border-transparent'
                   }`}
                 >
-                  <span className="shrink-0">{tab.icon}</span>
-                  <span>{tab.label}</span>
+                  {/* Active Tab Liquid Background */}
+                  {activeTab === tab.id && (
+                    <div className="absolute inset-0 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full -z-10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]"></div>
+                  )}
+                  
+                  <span className="shrink-0 relative z-10 drop-shadow-sm">{tab.icon}</span>
+                  <span className="relative z-10 drop-shadow-sm leading-none pt-0.5">{tab.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Mobile Menu Toggle (Visible only on Small screens) */}
-          <div className="md:hidden flex items-center gap-3 ml-auto">
-            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 shadow-sm truncate max-w-[120px]">
-              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : 'Info')}
+          {/* Mobile Menu Toggle */}
+          <div className="md:hidden flex items-center gap-3 ml-auto pr-2">
+            <span className="text-xs font-bold text-blue-600 bg-blue-50/80 backdrop-blur px-3 py-1.5 rounded-full border border-blue-100 shadow-sm truncate max-w-[120px]">
+              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'NPPN' ? 'Freelancer' : 'Info')}
             </span>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`p-3 rounded-full transition-all duration-300 shadow-lg ${mobileMenuOpen ? 'bg-slate-100 text-slate-900 rotate-90' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
+              className={`p-3 rounded-full transition-all duration-300 shadow-lg border border-white/20 ${mobileMenuOpen ? 'bg-slate-100 text-slate-900 rotate-90' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
 
-          {/* User Action Buttons (Dropdown) */}
-          <div className="hidden md:flex items-center shrink-0 ml-auto md:ml-0 relative">
+          {/* Right Action (Menu Lain) - Glass Button */}
+          <div className="hidden md:flex items-center shrink-0 ml-auto md:ml-0 relative pr-1">
              <button 
                onClick={() => setMoreMenuOpen(!moreMenuOpen)}
-               className={`p-3 rounded-full transition-all shadow-lg border flex items-center justify-center ${
+               className={`w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center border backdrop-blur-sm ${
                  moreMenuOpen || ['CALENDAR', 'HISTORY', 'FAQ'].includes(activeTab) 
-                 ? 'bg-slate-900 text-white border-slate-800 shadow-slate-900/20' 
-                 : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                 ? 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-slate-900/30' 
+                 : 'bg-white/60 text-slate-600 border-white/60 hover:bg-white hover:scale-105 shadow-sm'
                }`}
-               title="Menu Lain"
              >
                 <ChevronDown size={20} className={`transition-transform duration-300 ${moreMenuOpen ? 'rotate-180' : ''}`} />
              </button>
 
-             {/* Dropdown Menu */}
+             {/* Dropdown - Glassmorphism */}
              {moreMenuOpen && (
-               <div className="absolute top-full right-0 mt-3 w-60 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 p-2 flex flex-col gap-1 animate-enter origin-top-right z-50 ring-1 ring-slate-900/5">
+               <div className="absolute top-full right-0 mt-4 w-64 bg-white/80 backdrop-blur-2xl rounded-[2rem] shadow-2xl shadow-blue-900/20 border border-white/60 p-3 flex flex-col gap-2 animate-enter origin-top-right z-50 ring-1 ring-white/50">
                   <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Alat Bantu</div>
                   
                   <button 
                     onClick={() => { setActiveTab('CALENDAR'); setMoreMenuOpen(false); }}
-                    className={`flex items-center gap-3 w-full p-3 rounded-xl text-left transition-all ${activeTab === 'CALENDAR' ? 'bg-blue-50 text-blue-700' : 'hover:bg-slate-50 text-slate-700'}`}
+                    className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'CALENDAR' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
                   >
-                    <div className={`p-2 rounded-lg ${activeTab === 'CALENDAR' ? 'bg-blue-100' : 'bg-slate-100 text-slate-500'}`}>
-                        <CalendarDays size={16} />
+                    <div className={`p-2 rounded-xl ${activeTab === 'CALENDAR' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                        <CalendarDays size={18} />
                     </div>
                     <div>
                        <div className="font-bold text-sm">Kalender Pajak</div>
-                       <div className="text-[10px] opacity-70">Deadline & Agenda</div>
+                       <div className={`text-[10px] ${activeTab === 'CALENDAR' ? 'text-blue-100' : 'text-slate-400'}`}>Deadline & Agenda</div>
                     </div>
                   </button>
 
                   <button 
                     onClick={() => { setActiveTab('HISTORY'); setMoreMenuOpen(false); }}
-                    className={`flex items-center gap-3 w-full p-3 rounded-xl text-left transition-all ${activeTab === 'HISTORY' ? 'bg-blue-50 text-blue-700' : 'hover:bg-slate-50 text-slate-700'}`}
+                    className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'HISTORY' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
                   >
-                    <div className={`p-2 rounded-lg ${activeTab === 'HISTORY' ? 'bg-blue-100' : 'bg-slate-100 text-slate-500'}`}>
-                        <History size={16} />
+                    <div className={`p-2 rounded-xl ${activeTab === 'HISTORY' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                        <History size={18} />
                     </div>
                     <div>
                        <div className="font-bold text-sm">Riwayat</div>
-                       <div className="text-[10px] opacity-70">Log Perhitungan</div>
+                       <div className={`text-[10px] ${activeTab === 'HISTORY' ? 'text-blue-100' : 'text-slate-400'}`}>Log Perhitungan</div>
                     </div>
                   </button>
 
-                  <div className="h-px bg-slate-100 my-1"></div>
+                  <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-1"></div>
 
                   <button 
                     onClick={() => { setActiveTab('FAQ'); setMoreMenuOpen(false); }}
-                    className={`flex items-center gap-3 w-full p-3 rounded-xl text-left transition-all ${activeTab === 'FAQ' ? 'bg-blue-50 text-blue-700' : 'hover:bg-slate-50 text-slate-700'}`}
+                    className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'FAQ' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
                   >
-                    <div className={`p-2 rounded-lg ${activeTab === 'FAQ' ? 'bg-blue-100' : 'bg-slate-100 text-slate-500'}`}>
-                        <BookOpen size={16} />
+                    <div className={`p-2 rounded-xl ${activeTab === 'FAQ' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                        <BookOpen size={18} />
                     </div>
                     <div>
                        <div className="font-bold text-sm">Panduan</div>
-                       <div className="text-[10px] opacity-70">Pusat Bantuan</div>
+                       <div className={`text-[10px] ${activeTab === 'FAQ' ? 'text-blue-100' : 'text-slate-400'}`}>Pusat Bantuan</div>
                     </div>
                   </button>
                </div>
@@ -228,16 +242,16 @@ const App: React.FC = () => {
         </nav>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-x-4 top-24 bottom-4 z-40 md:hidden transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) origin-top no-print flex flex-col pointer-events-none ${mobileMenuOpen ? 'pointer-events-auto' : ''}`}>
+      {/* Mobile Menu Overlay - Liquid Glass */}
+      <div className={`fixed inset-x-4 top-28 bottom-6 z-40 md:hidden transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) origin-top no-print flex flex-col pointer-events-none ${mobileMenuOpen ? 'pointer-events-auto' : ''}`}>
         <div 
-          className={`bg-white/95 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-slate-900/20 border border-white/50 p-2 overflow-y-auto max-h-full transition-all duration-500 ${
+          className={`bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl shadow-blue-900/20 border border-white/60 p-3 overflow-y-auto max-h-full transition-all duration-500 ring-1 ring-white/50 ${
             mobileMenuOpen && showNav ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-8 scale-95 pointer-events-none'
           }`}
         >
           <div className="p-4 pb-0">
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Kalkulator Pajak</h3>
-            <div className="space-y-1">
+            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 pl-1">Kalkulator Pajak</h3>
+            <div className="space-y-2">
               {tabs.map((tab, idx) => 
                 renderMobileMenuItem(tab.id as Tab, tab.label, tab.fullLabel, tab.icon, idx)
               )}
@@ -245,9 +259,9 @@ const App: React.FC = () => {
           </div>
 
           <div className="p-4 pt-2">
-            <div className="h-px bg-slate-100 mb-4"></div>
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 pl-1">Alat Bantu</h3>
-            <div className="space-y-1">
+            <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mb-6"></div>
+            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 pl-1">Alat Bantu</h3>
+            <div className="space-y-2">
               {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Agenda & Deadline', <CalendarDays size={18} />, 6)}
               {renderMobileMenuItem('HISTORY', 'Riwayat', 'Log Perhitungan', <History size={18} />, 7)}
               {renderMobileMenuItem('FAQ', 'Panduan & FAQ', 'Pusat Informasi', <BookOpen size={18} />, 8)}
@@ -257,12 +271,13 @@ const App: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-20">
         
         {/* Hero Section */}
         <div key={`hero-${activeTab}`} className="text-center mb-12 animate-enter no-print">
-           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-3">
+           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-3 drop-shadow-sm">
              {activeTab === 'PPH21' && 'Kalkulator PPh 21'}
+             {activeTab === 'NPPN' && 'Kalkulator PPh Freelancer'}
              {activeTab === 'PPH23' && 'Kalkulator PPh 23'}
              {activeTab === 'FINAL' && 'Kalkulator PPh Final'}
              {activeTab === 'PPN' && 'Kalkulator PPN'}
@@ -272,8 +287,9 @@ const App: React.FC = () => {
              {activeTab === 'FAQ' && 'Pusat Bantuan & Informasi'}
              {activeTab === 'HISTORY' && 'Riwayat Perhitungan'}
            </h2>
-           <p className="text-base text-slate-500 max-w-2xl mx-auto leading-relaxed">
+           <p className="text-base text-slate-500 max-w-2xl mx-auto leading-relaxed font-medium">
              {activeTab === 'PPH21' && 'Hitung estimasi pajak penghasilan bersih karyawan dengan presisi tinggi.'}
+             {activeTab === 'NPPN' && 'Hitung pajak penghasilan Pekerja Bebas & Freelancer menggunakan Norma (NPPN).'}
              {activeTab === 'PPH23' && 'Perhitungan cepat untuk pajak dividen, royalti, bunga, hadiah, dan jasa.'}
              {activeTab === 'FINAL' && 'Alat bantu hitung pajak bersifat final seperti sewa tanah & UMKM.'}
              {activeTab === 'PPN' && 'Kalkulasi Pajak Pertambahan Nilai 11% untuk transaksi bisnis.'}
@@ -288,6 +304,7 @@ const App: React.FC = () => {
         {/* Main Content */}
         <div key={`content-${activeTab}`} className="animate-enter">
           {activeTab === 'PPH21' && <CalculatorPPH21 onContextUpdate={setContextData} />}
+          {activeTab === 'NPPN' && <CalculatorNPPN onContextUpdate={setContextData} />}
           {activeTab === 'PPH23' && <CalculatorPPH23 onContextUpdate={setContextData} />}
           {activeTab === 'FINAL' && <CalculatorFinal onContextUpdate={setContextData} />}
           {activeTab === 'PPN' && <CalculatorPPN onContextUpdate={setContextData} />}
@@ -303,12 +320,13 @@ const App: React.FC = () => {
       {/* Simple Footer */}
       <footer className="relative z-10 mt-auto py-8 text-center border-t border-slate-200/50 bg-white/30 backdrop-blur-sm no-print">
         <p className="text-sm font-medium text-slate-400">
-          © 2025 PajakKu Pro. Hak Cipta Dilindungi.
+          © 2025 PajakKu Piro. Hak Cipta Dilindungi.
         </p>
       </footer>
 
       <AIWidget contextData={contextData} />
     </div>
+    </>
   );
 };
 

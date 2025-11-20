@@ -5,13 +5,19 @@ export enum TaxType {
   PPH_FINAL = 'PPH_FINAL',
   PPN = 'PPN',
   PPNBM = 'PPNBM',
-  BEA_CUKAI = 'BEA_CUKAI'
+  BEA_CUKAI = 'BEA_CUKAI',
+  NPPN = 'NPPN'
 }
 
 export enum MaritalStatus {
   TK = 'TK', // Tidak Kawin
   K = 'K',   // Kawin
   HB = 'HB'  // Hidup Berpisah (treated similar to TK usually depending on interpretation, but simpler to map to TK logic for basic apps unless specific PTKP chosen)
+}
+
+export enum PPh21Method {
+  GROSS = 'GROSS',       // Potong Gaji (Karyawan Bayar)
+  GROSS_UP = 'GROSS_UP'  // Ditanggung Perusahaan (Tunjangan Pajak)
 }
 
 export interface PPh21State {
@@ -23,6 +29,7 @@ export interface PPh21State {
   hasNPWP: boolean;
   payPeriod: 'MONTHLY' | 'ANNUAL';
   includeBiayaJabatan: boolean;
+  method: PPh21Method; // Gross vs Gross Up
 }
 
 export interface PPh21Result {
@@ -34,6 +41,7 @@ export interface PPh21Result {
   taxLayers: { layer: string; rate: number; amount: number }[];
   annualTax: number;
   monthlyTax: number;
+  taxAllowance: number; // Tunjangan Pajak (0 if Gross method)
 }
 
 export interface PPh23State {

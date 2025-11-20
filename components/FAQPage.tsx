@@ -12,7 +12,8 @@ import {
   Link as LinkIcon,
   User,
   Briefcase,
-  Ship
+  Ship,
+  PenTool
 } from './Icons';
 
 interface FAQItem {
@@ -60,6 +61,17 @@ const faqData: FAQItem[] = [
     formula: "(Gaji Bruto Setahun - Biaya Jabatan - PTKP) × Tarif Lapisan Pajak",
     legalBasis: "UU HPP No. 7 Tahun 2021 & PP 58 Tahun 2023",
     officialLink: "https://pajak.go.id/index.php/id/pph-pasal-2126"
+  },
+  {
+    id: 'nppn',
+    title: 'PPh Freelancer (NPPN)',
+    icon: <PenTool size={20} className="text-white" />,
+    colorTheme: 'bg-teal-500',
+    eli5: "Kalau kamu Dokter, Youtuber, atau Freelancer yang tidak terikat satu kantor, kamu boleh pakai metode 'kira-kira' (Norma) untuk hitung keuntungan bersihmu. Jadi kamu tidak perlu pembukuan ribet (catat struk bensin, listrik, dll), cukup catat total omzet setahun saja.",
+    howItWorks: "Pemerintah sudah menetapkan persentase keuntungan bersih (Norma) untuk setiap pekerjaan. Misal Dokter dianggap untung 50% dari omzet. Jadi pajakmu dihitung dari 50% omzet itu, dikurangi PTKP, lalu dikalikan tarif pajak biasa. Syaratnya omzet setahun < 4.8 Miliar.",
+    formula: "(Omzet × Tarif Norma% - PTKP) × Tarif Progresif",
+    legalBasis: "PER-17/PJ/2015 & UU HPP",
+    officialLink: "https://www.pajak.go.id/id/norma-penghitungan-penghasilan-neto"
   },
   {
     id: 'bea_cukai',

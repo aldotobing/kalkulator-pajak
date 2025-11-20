@@ -27,7 +27,10 @@
             animation: {
               'blob': 'blob 10s infinite', /* Slowed down from 7s */
               'fade-up': 'fadeUp 0.5s ease-out forwards',
-              'enter': 'enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards', /* Faster, simplified bezier */
+              'enter': 'enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+              'shimmer': 'shimmer 2s linear infinite',
+              'slide-up-reveal': 'slideUpReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'scale-in': 'scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
             },
             keyframes: {
               blob: {
@@ -41,8 +44,20 @@
                 '100%': { opacity: '1', transform: 'translateY(0)' },
               },
               enter: {
-                '0%': { opacity: '0', transform: 'translateY(8px)' }, /* Removed scale, reduced distance */
+                '0%': { opacity: '0', transform: 'translateY(8px)' },
                 '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              shimmer: {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' }
+              },
+              slideUpReveal: {
+                '0%': { transform: 'translateY(100%)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' }
+              },
+              scaleIn: {
+                '0%': { transform: 'scale(0.8)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' }
               }
             }
           }
@@ -82,6 +97,36 @@
       }
       .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #e2e8f0;
+      }
+
+      /* Ultra Slim Horizontal Scrollbar (Show on Hover) */
+      .slim-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+      }
+      .slim-scrollbar:hover {
+        scrollbar-color: rgba(59, 130, 246, 0.3) transparent; /* Blue tint on hover for Firefox */
+      }
+      .slim-scrollbar::-webkit-scrollbar {
+        height: 1.5px; /* Extremely thin to prevent layout shift */
+      }
+      .slim-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        margin: 0 16px; /* Keep away from rounded corners */
+      }
+      .slim-scrollbar::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 100vh;
+        transition: background 0.3s;
+      }
+      .slim-scrollbar:hover::-webkit-scrollbar-thumb {
+        background: rgba(59, 130, 246, 0.5); /* Stronger blue on hover for visibility */
+      }
+      /* Hide Buttons/Arrows */
+      .slim-scrollbar::-webkit-scrollbar-button {
+        display: none;
+        width: 0;
+        height: 0;
       }
 
       /* PRINT STYLES */
@@ -221,3 +266,4 @@
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
+    

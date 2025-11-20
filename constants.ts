@@ -63,3 +63,21 @@ export const BC_GOODS_CATEGORY = [
   { id: 'SHOES', label: 'Sepatu (Shoes)', bm: 0.30, pph: 0.10 }, // Range 25-30%, PPh 10%
   { id: 'TEXTILE', label: 'Tekstil / Baju', bm: 0.25, pph: 0.05 }, // Range 15-25%
 ];
+
+// NPPN Professions (Freelancer / Pekerjaan Bebas)
+// Ref: PER-17/PJ/2015 (Approximation for 10 Ibukota Propinsi which is most common)
+export const NPPN_PROFESSIONS = [
+  { id: 'DOCTOR', label: 'Dokter', rate: 0.50 },
+  { id: 'LAWYER', label: 'Pengacara', rate: 0.50 },
+  { id: 'CONSULTANT', label: 'Konsultan', rate: 0.50 },
+  { id: 'NOTARY', label: 'Notaris', rate: 0.50 },
+  { id: 'ARCHITECT', label: 'Arsitek', rate: 0.50 },
+  { id: 'ACCOUNTANT', label: 'Akuntan', rate: 0.50 },
+  { id: 'ARTIST', label: 'Seniman / Musisi / Aktor', rate: 0.50 },
+  { id: 'WRITER', label: 'Penulis / Sastrawan', rate: 0.50 },
+  { id: 'RESEARCHER', label: 'Peneliti / Pengajar', rate: 0.50 },
+  { id: 'ATHLETE', label: 'Olahragawan', rate: 0.35 },
+  { id: 'AGENT', label: 'Agen Asuransi / Perantara', rate: 0.50 },
+  { id: 'DISTRIBUTOR_MLM', label: 'Distributor MLM', rate: 0.50 },
+  { id: 'OTHER', label: 'Jasa Lainnya', rate: 0.50 },
+];
