@@ -16,7 +16,8 @@ import {
   Ship,
   ChevronDown,
   PenTool,
-  Siren
+  Siren,
+  TrendingUp
 } from './components/Icons';
 import CalculatorPPH21 from './components/CalculatorPPH21';
 import CalculatorPPH23 from './components/CalculatorPPH23';
@@ -26,6 +27,7 @@ import CalculatorPPNBM from './components/CalculatorPPNBM';
 import CalculatorBeaCukai from './components/CalculatorBeaCukai';
 import CalculatorNPPN from './components/CalculatorNPPN';
 import CalculatorSanksi from './components/CalculatorSanksi';
+import SimulatorSalary from './components/SimulatorSalary';
 import FAQPage from './components/FAQPage';
 import HistoryPage from './components/HistoryPage';
 import TaxCalendar from './components/TaxCalendar';
@@ -33,7 +35,7 @@ import { AIWidget } from './components/AIWidget';
 import { SplashScreen } from './components/SplashScreen';
 
 // Type for Active Tab
-type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'CALENDAR' | 'FAQ' | 'HISTORY';
+type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'SIMULATION' | 'CALENDAR' | 'FAQ' | 'HISTORY';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true); // Splash Screen State
@@ -76,7 +78,6 @@ const App: React.FC = () => {
     { id: 'SANKSI', label: 'Sanksi', fullLabel: 'Hitung Denda Telat', icon: <Siren size={18} /> },
     { id: 'PPH23', label: 'PPh 23', fullLabel: 'Jasa, Dividen, Royalti', icon: <Building2 size={18} /> },
     { id: 'FINAL', label: 'PPh Final', fullLabel: 'Sewa Tanah & UMKM', icon: <Banknote size={18} /> },
-    // PPN Removed from main tabs
     { id: 'PPNBM', label: 'PPNBM', fullLabel: 'Pajak Barang Mewah', icon: <Gem size={18} /> },
     { id: 'BEACUKAI', label: 'Bea Cukai', fullLabel: 'Impor & Barang Kiriman', icon: <Ship size={18} /> },
   ];
@@ -171,7 +172,7 @@ const App: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center gap-3 ml-auto pr-2">
             <span className="text-xs font-bold text-blue-600 bg-blue-50/80 backdrop-blur px-3 py-1.5 rounded-full border border-blue-100 shadow-sm truncate max-w-[120px]">
-              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : 'Info')}
+              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'SIMULATION' ? 'Simulasi Gaji' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : 'Info')}
             </span>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -186,7 +187,7 @@ const App: React.FC = () => {
              <button 
                onClick={() => setMoreMenuOpen(!moreMenuOpen)}
                className={`w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center border backdrop-blur-sm ${
-                 moreMenuOpen || ['PPN', 'CALENDAR', 'HISTORY', 'FAQ'].includes(activeTab) 
+                 moreMenuOpen || ['PPN', 'CALENDAR', 'HISTORY', 'FAQ', 'SIMULATION'].includes(activeTab) 
                  ? 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-slate-900/30' 
                  : 'bg-white/60 text-slate-600 border-white/60 hover:bg-white hover:scale-105 shadow-sm'
                }`}
@@ -209,6 +210,19 @@ const App: React.FC = () => {
                     <div>
                        <div className="font-bold text-sm">Kalkulator PPN</div>
                        <div className={`text-[10px] ${activeTab === 'PPN' ? 'text-blue-100' : 'text-slate-400'}`}>Pajak Pertambahan Nilai</div>
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => { setActiveTab('SIMULATION'); setMoreMenuOpen(false); }}
+                    className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'SIMULATION' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
+                  >
+                    <div className={`p-2 rounded-xl ${activeTab === 'SIMULATION' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                        <TrendingUp size={18} />
+                    </div>
+                    <div>
+                       <div className="font-bold text-sm">Simulasi Gaji</div>
+                       <div className={`text-[10px] ${activeTab === 'SIMULATION' ? 'text-blue-100' : 'text-slate-400'}`}>Negosiasi Net ke Gross</div>
                     </div>
                   </button>
 
@@ -249,7 +263,7 @@ const App: React.FC = () => {
                     </div>
                     <div>
                        <div className="font-bold text-sm">Panduan</div>
-                       <div className={`text-[10px] ${activeTab === 'FAQ' ? 'text-blue-100' : 'text-slate-400'}`}>Pusat Bantuan</div>
+                       <div className={`text-[10px] ${activeTab === 'FAQ' ? 'text-blue-100' : 'text-slate-400'}`}>Pusat Informasi</div>
                     </div>
                   </button>
                </div>
@@ -279,9 +293,10 @@ const App: React.FC = () => {
             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 pl-1">Menu Lainnya</h3>
             <div className="space-y-2">
               {renderMobileMenuItem('PPN', 'Kalkulator PPN', 'Pajak Pertambahan Nilai', <Percent size={18} />, 6)}
-              {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Agenda & Deadline', <CalendarDays size={18} />, 7)}
-              {renderMobileMenuItem('HISTORY', 'Riwayat', 'Log Perhitungan', <History size={18} />, 8)}
-              {renderMobileMenuItem('FAQ', 'Panduan & FAQ', 'Pusat Informasi', <BookOpen size={18} />, 9)}
+              {renderMobileMenuItem('SIMULATION', 'Simulasi Gaji', 'Nego Net ke Gross', <TrendingUp size={18} />, 7)}
+              {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Agenda & Deadline', <CalendarDays size={18} />, 8)}
+              {renderMobileMenuItem('HISTORY', 'Riwayat', 'Log Perhitungan', <History size={18} />, 9)}
+              {renderMobileMenuItem('FAQ', 'Panduan & FAQ', 'Pusat Informasi', <BookOpen size={18} />, 10)}
             </div>
           </div>
         </div>
@@ -301,6 +316,7 @@ const App: React.FC = () => {
              {activeTab === 'PPN' && 'Kalkulator PPN'}
              {activeTab === 'PPNBM' && 'Kalkulator PPNBM'}
              {activeTab === 'BEACUKAI' && 'Bea Masuk & Pajak Impor'}
+             {activeTab === 'SIMULATION' && 'Simulasi Gaji (Reverse Calculator)'}
              {activeTab === 'CALENDAR' && 'Kalender Pajak Indonesia'}
              {activeTab === 'FAQ' && 'Pusat Bantuan & Informasi'}
              {activeTab === 'HISTORY' && 'Riwayat Perhitungan'}
@@ -314,6 +330,7 @@ const App: React.FC = () => {
              {activeTab === 'PPN' && 'Kalkulasi Pajak Pertambahan Nilai 11% untuk transaksi bisnis.'}
              {activeTab === 'PPNBM' && 'Estimasi pajak barang mewah untuk kendaraan dan properti.'}
              {activeTab === 'BEACUKAI' && 'Estimasi pajak barang kiriman (impor) sesuai PMK 199/2019 & PMK 96/2023.'}
+             {activeTab === 'SIMULATION' && 'Hitung berapa Gaji Kotor (Gross) yang harus Anda minta untuk mendapatkan Gaji Bersih (Net) idaman.'}
              {activeTab === 'CALENDAR' && 'Pantau tanggal jatuh tempo pelaporan dan pembayaran pajak agar bebas denda.'}
              {activeTab === 'FAQ' && 'Pelajari jenis-jenis pajak di Indonesia dan cara menggunakan aplikasi.'}
              {activeTab === 'HISTORY' && 'Akses kembali perhitungan pajak yang telah Anda simpan sebelumnya.'}
@@ -330,6 +347,7 @@ const App: React.FC = () => {
           {activeTab === 'PPN' && <CalculatorPPN onContextUpdate={setContextData} />}
           {activeTab === 'PPNBM' && <CalculatorPPNBM onContextUpdate={setContextData} />}
           {activeTab === 'BEACUKAI' && <CalculatorBeaCukai onContextUpdate={setContextData} />}
+          {activeTab === 'SIMULATION' && <SimulatorSalary onContextUpdate={setContextData} />}
           {activeTab === 'CALENDAR' && <TaxCalendar />}
           {activeTab === 'FAQ' && <FAQPage />}
           {activeTab === 'HISTORY' && <HistoryPage />}

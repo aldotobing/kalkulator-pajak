@@ -2,6 +2,16 @@
 import { PPH21_BRACKETS, PTKP_BASE, PTKP_MARRIED, PTKP_PER_CHILD, MAX_CHILDREN, BIAYA_JABATAN_RATE, MAX_BIAYA_JABATAN_ANNUAL } from '../constants';
 import { PPh21State, PPh21Result, MaritalStatus, PPh21Method } from '../types';
 
+// BPJS Constants (Employee Share)
+// JHT: 2%
+// JP: 1% (Max base ~10jt)
+// JKn (Health): 1% (Max base 12jt)
+const BPJS_JHT_RATE = 0.02;
+const BPJS_JP_RATE = 0.01;
+const BPJS_JKN_RATE = 0.01;
+const MAX_JP_BASE = 10042300; // 2024 Cap Estimate
+const MAX_JKN_BASE = 12000000; // 2024 Cap
+
 export const calculatePPh21 = (data: PPh21State): PPh21Result => {
   // 1. Determine Base Annual Gross (Without Tax Allowance)
   const baseAnnualGross = (data.grossSalary + data.allowance) * 12 + data.thrBonus;
@@ -118,4 +128,71 @@ export const formatCurrency = (value: number) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value);
+};
+
+// Reverse Calculator: Find Gross needed for Target Net
+// Net = Gross - Tax(Gross) - BPJS(Gross)
+// Since function is monotonic increasing, we can use binary search
+export const calculateReverseSalary = (
+  targetNet: number,
+  status: MaritalStatus,
+  children: number,
+  hasNPWP: boolean
+) => {
+  let low = targetNet;
+  let high = targetNet * 2; // Upper bound heuristic
+  let iterations = 0;
+  let calculatedGross = 0;
+  
+  // Helper to get Net from Gross
+  const getNetFromGross = (gross: number) => {
+    // 1. BPJS Deductions (Employee Share)
+    const jht = gross * BPJS_JHT_RATE;
+    const jp = Math.min(gross, MAX_JP_BASE) * BPJS_JP_RATE;
+    const jkn = Math.min(gross, MAX_JKN_BASE) * BPJS_JKN_RATE;
+    const totalBpjs = jht + jp + jkn;
+    
+    // 2. Tax
+    const pphRes = calculatePPh21({
+      grossSalary: gross,
+      allowance: 0,
+      thrBonus: 0,
+      maritalStatus: status,
+      children: children,
+      hasNPWP: hasNPWP,
+      payPeriod: 'MONTHLY',
+      includeBiayaJabatan: true,
+      method: PPh21Method.GROSS
+    });
+    
+    const tax = pphRes.monthlyTax;
+    
+    return {
+      gross,
+      tax,
+      bpjs: totalBpjs,
+      net: gross - tax - totalBpjs
+    };
+  };
+
+  // Binary Search for 50 iterations or until close enough
+  while (iterations < 50) {
+    const mid = (low + high) / 2;
+    const res = getNetFromGross(mid);
+    
+    if (Math.abs(res.net - targetNet) < 500) { // Tolerance Rp 500
+      calculatedGross = mid;
+      break;
+    }
+    
+    if (res.net < targetNet) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+    iterations++;
+    calculatedGross = mid;
+  }
+  
+  return getNetFromGross(calculatedGross);
 };

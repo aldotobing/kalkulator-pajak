@@ -7,7 +7,8 @@ export enum TaxType {
   PPNBM = 'PPNBM',
   BEA_CUKAI = 'BEA_CUKAI',
   NPPN = 'NPPN',
-  SANKSI = 'SANKSI'
+  SANKSI = 'SANKSI',
+  SIMULATION = 'SIMULATION'
 }
 
 export enum MaritalStatus {
