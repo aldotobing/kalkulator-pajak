@@ -15,7 +15,8 @@ import {
   Banknote,
   Ship,
   ChevronDown,
-  PenTool
+  PenTool,
+  Siren
 } from './components/Icons';
 import CalculatorPPH21 from './components/CalculatorPPH21';
 import CalculatorPPH23 from './components/CalculatorPPH23';
@@ -24,6 +25,7 @@ import CalculatorPPN from './components/CalculatorPPN';
 import CalculatorPPNBM from './components/CalculatorPPNBM';
 import CalculatorBeaCukai from './components/CalculatorBeaCukai';
 import CalculatorNPPN from './components/CalculatorNPPN';
+import CalculatorSanksi from './components/CalculatorSanksi';
 import FAQPage from './components/FAQPage';
 import HistoryPage from './components/HistoryPage';
 import TaxCalendar from './components/TaxCalendar';
@@ -31,7 +33,7 @@ import { AIWidget } from './components/AIWidget';
 import { SplashScreen } from './components/SplashScreen';
 
 // Type for Active Tab
-type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'CALENDAR' | 'FAQ' | 'HISTORY';
+type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'CALENDAR' | 'FAQ' | 'HISTORY';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true); // Splash Screen State
@@ -71,9 +73,10 @@ const App: React.FC = () => {
   const tabs = [
     { id: 'PPH21', label: 'PPh 21', fullLabel: 'Karyawan & Pribadi', icon: <Briefcase size={18} /> },
     { id: 'NPPN', label: 'Freelancer', fullLabel: 'Pekerja Bebas (Norma)', icon: <PenTool size={18} /> },
+    { id: 'SANKSI', label: 'Sanksi', fullLabel: 'Hitung Denda Telat', icon: <Siren size={18} /> },
     { id: 'PPH23', label: 'PPh 23', fullLabel: 'Jasa, Dividen, Royalti', icon: <Building2 size={18} /> },
     { id: 'FINAL', label: 'PPh Final', fullLabel: 'Sewa Tanah & UMKM', icon: <Banknote size={18} /> },
-    { id: 'PPN', label: 'PPN', fullLabel: 'Pajak Pertambahan Nilai', icon: <Percent size={18} /> },
+    // PPN Removed from main tabs
     { id: 'PPNBM', label: 'PPNBM', fullLabel: 'Pajak Barang Mewah', icon: <Gem size={18} /> },
     { id: 'BEACUKAI', label: 'Bea Cukai', fullLabel: 'Impor & Barang Kiriman', icon: <Ship size={18} /> },
   ];
@@ -168,7 +171,7 @@ const App: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center gap-3 ml-auto pr-2">
             <span className="text-xs font-bold text-blue-600 bg-blue-50/80 backdrop-blur px-3 py-1.5 rounded-full border border-blue-100 shadow-sm truncate max-w-[120px]">
-              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'NPPN' ? 'Freelancer' : 'Info')}
+              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : 'Info')}
             </span>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -183,7 +186,7 @@ const App: React.FC = () => {
              <button 
                onClick={() => setMoreMenuOpen(!moreMenuOpen)}
                className={`w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center border backdrop-blur-sm ${
-                 moreMenuOpen || ['CALENDAR', 'HISTORY', 'FAQ'].includes(activeTab) 
+                 moreMenuOpen || ['PPN', 'CALENDAR', 'HISTORY', 'FAQ'].includes(activeTab) 
                  ? 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-slate-900/30' 
                  : 'bg-white/60 text-slate-600 border-white/60 hover:bg-white hover:scale-105 shadow-sm'
                }`}
@@ -194,8 +197,23 @@ const App: React.FC = () => {
              {/* Dropdown - Glassmorphism */}
              {moreMenuOpen && (
                <div className="absolute top-full right-0 mt-4 w-64 bg-white/80 backdrop-blur-2xl rounded-[2rem] shadow-2xl shadow-blue-900/20 border border-white/60 p-3 flex flex-col gap-2 animate-enter origin-top-right z-50 ring-1 ring-white/50">
-                  <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Alat Bantu</div>
+                  <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menu Lainnya</div>
                   
+                  <button 
+                    onClick={() => { setActiveTab('PPN'); setMoreMenuOpen(false); }}
+                    className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'PPN' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
+                  >
+                    <div className={`p-2 rounded-xl ${activeTab === 'PPN' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                        <Percent size={18} />
+                    </div>
+                    <div>
+                       <div className="font-bold text-sm">Kalkulator PPN</div>
+                       <div className={`text-[10px] ${activeTab === 'PPN' ? 'text-blue-100' : 'text-slate-400'}`}>Pajak Pertambahan Nilai</div>
+                    </div>
+                  </button>
+
+                  <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-1"></div>
+
                   <button 
                     onClick={() => { setActiveTab('CALENDAR'); setMoreMenuOpen(false); }}
                     className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'CALENDAR' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
@@ -221,8 +239,6 @@ const App: React.FC = () => {
                        <div className={`text-[10px] ${activeTab === 'HISTORY' ? 'text-blue-100' : 'text-slate-400'}`}>Log Perhitungan</div>
                     </div>
                   </button>
-
-                  <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-1"></div>
 
                   <button 
                     onClick={() => { setActiveTab('FAQ'); setMoreMenuOpen(false); }}
@@ -260,11 +276,12 @@ const App: React.FC = () => {
 
           <div className="p-4 pt-2">
             <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mb-6"></div>
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 pl-1">Alat Bantu</h3>
+            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 pl-1">Menu Lainnya</h3>
             <div className="space-y-2">
-              {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Agenda & Deadline', <CalendarDays size={18} />, 6)}
-              {renderMobileMenuItem('HISTORY', 'Riwayat', 'Log Perhitungan', <History size={18} />, 7)}
-              {renderMobileMenuItem('FAQ', 'Panduan & FAQ', 'Pusat Informasi', <BookOpen size={18} />, 8)}
+              {renderMobileMenuItem('PPN', 'Kalkulator PPN', 'Pajak Pertambahan Nilai', <Percent size={18} />, 6)}
+              {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Agenda & Deadline', <CalendarDays size={18} />, 7)}
+              {renderMobileMenuItem('HISTORY', 'Riwayat', 'Log Perhitungan', <History size={18} />, 8)}
+              {renderMobileMenuItem('FAQ', 'Panduan & FAQ', 'Pusat Informasi', <BookOpen size={18} />, 9)}
             </div>
           </div>
         </div>
@@ -278,6 +295,7 @@ const App: React.FC = () => {
            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-3 drop-shadow-sm">
              {activeTab === 'PPH21' && 'Kalkulator PPh 21'}
              {activeTab === 'NPPN' && 'Kalkulator PPh Freelancer'}
+             {activeTab === 'SANKSI' && 'Kalkulator Sanksi Pajak'}
              {activeTab === 'PPH23' && 'Kalkulator PPh 23'}
              {activeTab === 'FINAL' && 'Kalkulator PPh Final'}
              {activeTab === 'PPN' && 'Kalkulator PPN'}
@@ -290,6 +308,7 @@ const App: React.FC = () => {
            <p className="text-base text-slate-500 max-w-2xl mx-auto leading-relaxed font-medium">
              {activeTab === 'PPH21' && 'Hitung estimasi pajak penghasilan bersih karyawan dengan presisi tinggi.'}
              {activeTab === 'NPPN' && 'Hitung pajak penghasilan Pekerja Bebas & Freelancer menggunakan Norma (NPPN).'}
+             {activeTab === 'SANKSI' && 'Hitung denda telat bayar atau lapor pajak sesuai tarif bunga acuan KMK.'}
              {activeTab === 'PPH23' && 'Perhitungan cepat untuk pajak dividen, royalti, bunga, hadiah, dan jasa.'}
              {activeTab === 'FINAL' && 'Alat bantu hitung pajak bersifat final seperti sewa tanah & UMKM.'}
              {activeTab === 'PPN' && 'Kalkulasi Pajak Pertambahan Nilai 11% untuk transaksi bisnis.'}
@@ -305,6 +324,7 @@ const App: React.FC = () => {
         <div key={`content-${activeTab}`} className="animate-enter">
           {activeTab === 'PPH21' && <CalculatorPPH21 onContextUpdate={setContextData} />}
           {activeTab === 'NPPN' && <CalculatorNPPN onContextUpdate={setContextData} />}
+          {activeTab === 'SANKSI' && <CalculatorSanksi onContextUpdate={setContextData} />}
           {activeTab === 'PPH23' && <CalculatorPPH23 onContextUpdate={setContextData} />}
           {activeTab === 'FINAL' && <CalculatorFinal onContextUpdate={setContextData} />}
           {activeTab === 'PPN' && <CalculatorPPN onContextUpdate={setContextData} />}

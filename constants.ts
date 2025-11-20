@@ -81,3 +81,11 @@ export const NPPN_PROFESSIONS = [
   { id: 'DISTRIBUTOR_MLM', label: 'Distributor MLM', rate: 0.50 },
   { id: 'OTHER', label: 'Jasa Lainnya', rate: 0.50 },
 ];
+
+// Sanksi / Penalty Constants
+export const SANKSI_TYPES = [
+  { id: 'TELAT_BAYAR', label: 'Telat Bayar / Pembetulan Sendiri', uplift: 0.05, code: 'Pasal 9 (2a) / Pasal 8 (2)' },
+  { id: 'PEMERIKSAAN', label: 'Kurang Bayar (SKPKB) / Pemeriksaan', uplift: 0.20, code: 'Pasal 13 (2)' },
+];
+
+export const DEFAULT_KMK_RATE = 0.0583; // Approx 5.83% typical reference, user can edit

@@ -41,7 +41,8 @@ import {
   Copy,
   Ship,
   Container,
-  PenTool
+  PenTool,
+  Siren
 } from 'lucide-react';
 
 // Custom Sophisticated AI Icon (Admin/Customer Care Persona)
@@ -135,5 +136,6 @@ export {
   Copy,
   Ship,
   Container,
-  PenTool
+  PenTool,
+  Siren
 };
