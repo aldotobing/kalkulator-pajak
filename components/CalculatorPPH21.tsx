@@ -209,7 +209,7 @@ Estimasi Setahun: ${formatCurrency(result.annualTax)}
           </div>
 
           <div className="mb-8 pr-10">
-             <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 tracking-tight">PPh Pasal 21 (2025)</h2>
+             <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 tracking-tight">PPh Pasal 21</h2>
              
              <div className="text-slate-500 text-sm flex items-center gap-1.5 flex-wrap leading-relaxed">
                 <span>Skema Terbaru: Tarif Efektif Rata-Rata (TER).</span>
