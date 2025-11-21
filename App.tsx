@@ -60,6 +60,17 @@ const App: React.FC = () => {
   const [contextData, setContextData] = useState<string>('');
   const [showNav, setShowNav] = useState(true);
 
+  // Global Safety Timeout: Force loading to false if stuck for > 8 seconds
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      if (isLoading) {
+        console.warn("Splash screen timeout safety triggered.");
+        setIsLoading(false);
+      }
+    }, 8000);
+    return () => clearTimeout(safetyTimer);
+  }, [isLoading]);
+
   // Lock Body Scroll when Mobile Menu is Open
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -269,7 +280,7 @@ const App: React.FC = () => {
                     </div>
                     <div>
                        <div className="font-bold text-sm">Komparasi Pajak</div>
-                       <div className={`text-[10px] ${activeTab === 'COMPARISON' ? 'text-blue-100' : 'text-slate-400'}`}>Karyawan vs UMKM vs Free</div>
+                       <div className={`text-[10px] ${activeTab === 'COMPARISON' ? 'text-blue-100' : 'text-slate-400'}`}>Karyawan vs UMKM</div>
                     </div>
                   </button>
 
