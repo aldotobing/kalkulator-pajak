@@ -18,6 +18,20 @@ export const PPH21_BRACKETS = [
   { limit: Infinity, rate: 0.35 },
 ];
 
+// PPh 21 Final - Pesangon (PP 68 Tahun 2009)
+export const PESANGON_BRACKETS = [
+  { limit: 50000000, rate: 0.00 },
+  { limit: 100000000, rate: 0.05 },
+  { limit: 500000000, rate: 0.15 },
+  { limit: Infinity, rate: 0.25 },
+];
+
+// PPh 21 Final - Manfaat Pensiun / THT / JHT (PP 68 Tahun 2009)
+export const PENSIUN_BRACKETS = [
+  { limit: 50000000, rate: 0.00 },
+  { limit: Infinity, rate: 0.05 },
+];
+
 // PPh 23 Rates
 export const PPH23_RATES = {
   DIVIDEND: 0.15,

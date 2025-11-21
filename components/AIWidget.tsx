@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { AIIcon, X, Send, RefreshCw, Sparkles } from './Icons';
-import { generateTaxAdvice } from '../services/geminiService';
+import { generateTaxAdviceStream } from '../services/geminiService';
 import { ChatMessage } from '../types';
 
 interface AIWidgetProps {
@@ -33,11 +33,33 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
     setInput('');
     setIsLoading(true);
 
-    const responseText = await generateTaxAdvice(input, contextData);
-    
-    const modelMsg: ChatMessage = { role: 'model', text: responseText, timestamp: Date.now() };
+    // Create a placeholder for the model message
+    const modelMsgId = Date.now() + 1;
+    const modelMsg: ChatMessage = { role: 'model', text: '', timestamp: modelMsgId };
     setMessages(prev => [...prev, modelMsg]);
-    setIsLoading(false);
+
+    try {
+      const stream = generateTaxAdviceStream(input, contextData);
+      let isFirstChunk = true;
+
+      for await (const chunk of stream) {
+        if (isFirstChunk) {
+          setIsLoading(false);
+          isFirstChunk = false;
+        }
+
+        setMessages(prev => prev.map(msg => 
+          msg.timestamp === modelMsgId 
+            ? { ...msg, text: msg.text + chunk }
+            : msg
+        ));
+      }
+    } catch (error) {
+      console.error("Stream error:", error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -67,6 +89,19 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
       // Skip empty lines
       if (trimmed === '') {
         output += '<div class="h-3"></div>';
+        return;
+      }
+
+      // Horizontal Rule (--- or *** or ___)
+      if (trimmed === '---' || trimmed === '***' || trimmed === '___') {
+        output += '<hr class="my-4 border-t border-slate-200" />';
+        return;
+      }
+
+      // Headers (####)
+      if (trimmed.startsWith('#### ')) {
+        const content = parseInline(trimmed.substring(5));
+        output += `<h4 class="font-bold text-slate-800 mt-3 mb-1 text-xs uppercase tracking-wider">${content}</h4>`;
         return;
       }
 
@@ -146,28 +181,33 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-slate-50 scroll-smooth">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+          {messages.map((msg, idx) => {
+            // Hide empty model messages (waiting for stream start) to prevent empty bubble
+            if (msg.role === 'model' && !msg.text) return null;
+
+            return (
               <div
-                className={`max-w-[90%] p-4 rounded-2xl text-sm shadow-sm ${
-                  msg.role === 'user'
-                    ? 'bg-blue-600 text-white rounded-br-sm'
-                    : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm'
-                }`}
+                key={idx}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                 {msg.role === 'user' ? (
-                   <p className="leading-relaxed">{msg.text}</p>
-                 ) : (
-                   <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.text) }} />
-                 )}
+                <div
+                  className={`max-w-[90%] p-4 rounded-2xl text-sm shadow-sm ${
+                    msg.role === 'user'
+                      ? 'bg-blue-600 text-white rounded-br-sm'
+                      : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm'
+                  }`}
+                >
+                   {msg.role === 'user' ? (
+                     <p className="leading-relaxed">{msg.text}</p>
+                   ) : (
+                     <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.text) }} />
+                   )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           {isLoading && (
-            <div className="flex justify-start">
+            <div className="flex justify-start animate-fade-up">
               <div className="bg-white border border-slate-200 p-4 rounded-2xl rounded-bl-sm shadow-sm flex items-center gap-3">
                 <RefreshCw className="animate-spin text-blue-500" size={18} />
                 <span className="text-xs font-medium text-slate-500">Sedang menganalisa...</span>

@@ -24,7 +24,8 @@ import {
   Factory,
   Activity,
   Scale,
-  FileText
+  FileText,
+  UserMinus
 } from './components/Icons';
 import CalculatorPPH21 from './components/CalculatorPPH21';
 import CalculatorPPH23 from './components/CalculatorPPH23';
@@ -43,6 +44,7 @@ import CalculatorComparison from './components/CalculatorComparison';
 import TaxCodeFinder from './components/TaxCodeFinder';
 import TaxHealthCheck from './components/TaxHealthCheck';
 import InvoiceGenerator from './components/InvoiceGenerator';
+import CalculatorPesangon from './components/CalculatorPesangon';
 import FAQPage from './components/FAQPage';
 import HistoryPage from './components/HistoryPage';
 import TaxCalendar from './components/TaxCalendar';
@@ -50,7 +52,7 @@ import { AIWidget } from './components/AIWidget';
 import { SplashScreen } from './components/SplashScreen';
 
 // Type for Active Tab
-type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'SIMULATION' | 'TAX_CODES' | 'PKB' | 'BPHTB' | 'INVESTMENT' | 'PPH_BADAN' | 'TAX_HEALTH' | 'COMPARISON' | 'INVOICE' | 'CALENDAR' | 'FAQ' | 'HISTORY';
+type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'SIMULATION' | 'TAX_CODES' | 'PKB' | 'BPHTB' | 'INVESTMENT' | 'PPH_BADAN' | 'TAX_HEALTH' | 'COMPARISON' | 'INVOICE' | 'CALENDAR' | 'FAQ' | 'HISTORY' | 'PESANGON';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true); // Splash Screen State
@@ -217,7 +219,7 @@ const App: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center gap-3 ml-auto pr-2">
             <span className="text-xs font-bold text-blue-600 bg-blue-50/80 backdrop-blur px-3 py-1.5 rounded-full border border-blue-100 shadow-sm truncate max-w-[120px]">
-              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'INVOICE' ? 'Buat Invoice' : activeTab === 'TAX_HEALTH' ? 'Cek Risiko' : activeTab === 'COMPARISON' ? 'Komparasi Pajak' : activeTab === 'INVESTMENT' ? 'Pajak Investasi' : activeTab === 'PPH_BADAN' ? 'PPh Badan' : activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'SIMULATION' ? 'Simulasi Gaji' : activeTab === 'TAX_CODES' ? 'Kode Pajak' : activeTab === 'PKB' ? 'Pajak Kendaraan' : activeTab === 'BPHTB' ? 'Pajak Rumah' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : 'Info')}
+              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'INVOICE' ? 'Buat Invoice' : activeTab === 'PESANGON' ? 'Pesangon' : activeTab === 'TAX_HEALTH' ? 'Cek Risiko' : activeTab === 'COMPARISON' ? 'Komparasi Pajak' : activeTab === 'INVESTMENT' ? 'Pajak Investasi' : activeTab === 'PPH_BADAN' ? 'PPh Badan' : activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'SIMULATION' ? 'Simulasi Gaji' : activeTab === 'TAX_CODES' ? 'Kode Pajak' : activeTab === 'PKB' ? 'Pajak Kendaraan' : activeTab === 'BPHTB' ? 'Pajak Rumah' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : 'Info')}
             </span>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -232,7 +234,7 @@ const App: React.FC = () => {
              <button 
                onClick={() => setMoreMenuOpen(!moreMenuOpen)}
                className={`w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center border backdrop-blur-sm ${
-                 moreMenuOpen || ['INVOICE', 'PPN', 'CALENDAR', 'HISTORY', 'FAQ', 'SIMULATION', 'TAX_CODES', 'PKB', 'BPHTB', 'INVESTMENT', 'PPH_BADAN', 'TAX_HEALTH', 'COMPARISON'].includes(activeTab) 
+                 moreMenuOpen || ['INVOICE', 'PPN', 'CALENDAR', 'HISTORY', 'FAQ', 'SIMULATION', 'TAX_CODES', 'PKB', 'BPHTB', 'INVESTMENT', 'PPH_BADAN', 'TAX_HEALTH', 'COMPARISON', 'PESANGON'].includes(activeTab) 
                  ? 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-slate-900/30' 
                  : 'bg-white/60 text-slate-600 border-white/60 hover:bg-white hover:scale-105 shadow-sm'
                }`}
@@ -255,6 +257,19 @@ const App: React.FC = () => {
                     <div>
                        <div className="font-bold text-sm">Buat Invoice</div>
                        <div className={`text-[10px] ${activeTab === 'INVOICE' ? 'text-blue-100' : 'text-slate-400'}`}>Faktur Pajak Sederhana</div>
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => { setActiveTab('PESANGON'); setMoreMenuOpen(false); }}
+                    className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'PESANGON' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
+                  >
+                    <div className={`p-2 rounded-xl ${activeTab === 'PESANGON' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                        <UserMinus size={18} />
+                    </div>
+                    <div>
+                       <div className="font-bold text-sm">Pesangon & Pensiun</div>
+                       <div className={`text-[10px] ${activeTab === 'PESANGON' ? 'text-blue-100' : 'text-slate-400'}`}>Pajak PHK / JHT</div>
                     </div>
                   </button>
 
@@ -441,14 +456,15 @@ const App: React.FC = () => {
                    {renderMobileMenuItem('COMPARISON', 'Komparasi Pajak', 'Karyawan vs UMKM', <Scale size={18} />, 5)}
                    {renderMobileMenuItem('PPH_BADAN', 'PPh Badan', 'Pajak Perusahaan', <Factory size={18} />, 6)}
                    {renderMobileMenuItem('INVESTMENT', 'Pajak Investasi', 'Kripto, Saham, Emas', <Bitcoin size={18} />, 7)}
-                   {renderMobileMenuItem('PKB', 'Pajak Kendaraan', 'Estimasi PKB Tahunan', <Car size={18} />, 8)}
-                   {renderMobileMenuItem('BPHTB', 'Pajak Rumah', 'Jual Beli Properti', <Home size={18} />, 9)}
-                   {renderMobileMenuItem('PPN', 'Kalkulator PPN', 'Pajak Pertambahan Nilai', <Percent size={18} />, 10)}
-                   {renderMobileMenuItem('SIMULATION', 'Simulasi Gaji', 'Negosiasi Net ke Gross', <TrendingUp size={18} />, 11)}
-                   {renderMobileMenuItem('TAX_CODES', 'Direktori Kode Pajak', 'Cari KAP & KJS', <Hash size={18} />, 12)}
-                   {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Deadline & Agenda', <CalendarDays size={18} />, 13)}
-                   {renderMobileMenuItem('HISTORY', 'Riwayat', 'Daftar Perhitungan', <History size={18} />, 14)}
-                   {renderMobileMenuItem('FAQ', 'Panduan & Edukasi', 'Pusat Informasi', <BookOpen size={18} />, 15)}
+                   {renderMobileMenuItem('PESANGON', 'Pajak Pesangon', 'PHK & Pensiun', <UserMinus size={18} />, 8)}
+                   {renderMobileMenuItem('PKB', 'Pajak Kendaraan', 'Estimasi PKB Tahunan', <Car size={18} />, 9)}
+                   {renderMobileMenuItem('BPHTB', 'Pajak Rumah', 'Jual Beli Properti', <Home size={18} />, 10)}
+                   {renderMobileMenuItem('PPN', 'Kalkulator PPN', 'Pajak Pertambahan Nilai', <Percent size={18} />, 11)}
+                   {renderMobileMenuItem('SIMULATION', 'Simulasi Gaji', 'Negosiasi Net ke Gross', <TrendingUp size={18} />, 12)}
+                   {renderMobileMenuItem('TAX_CODES', 'Direktori Kode Pajak', 'Cari KAP & KJS', <Hash size={18} />, 13)}
+                   {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Deadline & Agenda', <CalendarDays size={18} />, 14)}
+                   {renderMobileMenuItem('HISTORY', 'Riwayat', 'Daftar Perhitungan', <History size={18} />, 15)}
+                   {renderMobileMenuItem('FAQ', 'Panduan & Edukasi', 'Pusat Informasi', <BookOpen size={18} />, 16)}
                  </div>
                </div>
                
@@ -486,6 +502,7 @@ const App: React.FC = () => {
                   {activeTab === 'FAQ' && 'Pusat Bantuan & Informasi'}
                   {activeTab === 'HISTORY' && 'Riwayat Perhitungan'}
                   {activeTab === 'INVOICE' && 'Invoice Generator & Faktur'}
+                  {activeTab === 'PESANGON' && 'Kalkulator Pajak Pesangon & Pensiun'}
                </h1>
                <p className="text-base text-slate-500 max-w-2xl mx-auto leading-relaxed">
                   {activeTab === 'PPH21' && 'Hitung estimasi pajak penghasilan (PPh 21) karyawan tetap dengan metode terbaru TER 2024 dan tarif progresif UU HPP.'}
@@ -508,6 +525,7 @@ const App: React.FC = () => {
                   {activeTab === 'FAQ' && 'Pelajari istilah perpajakan, cara perhitungan, dan dasar hukum dengan bahasa yang mudah dimengerti.'}
                   {activeTab === 'HISTORY' && 'Akses kembali hasil perhitungan yang telah Anda simpan sebelumnya.'}
                   {activeTab === 'INVOICE' && 'Buat invoice profesional secara instan dengan perhitungan otomatis PPN 11% dan PPh 23. Download sebagai PDF siap cetak.'}
+                  {activeTab === 'PESANGON' && 'Hitung PPh Final atas Uang Pesangon, UPMK, UPH dan Manfaat Pensiun/JHT yang dibayarkan sekaligus.'}
                </p>
             </div>
 
@@ -529,6 +547,7 @@ const App: React.FC = () => {
             {activeTab === 'SIMULATION' && <SimulatorSalary onContextUpdate={setContextData} />}
             {activeTab === 'TAX_CODES' && <TaxCodeFinder />}
             {activeTab === 'INVOICE' && <InvoiceGenerator />}
+            {activeTab === 'PESANGON' && <CalculatorPesangon onContextUpdate={setContextData} />}
             {activeTab === 'CALENDAR' && <TaxCalendar />}
             {activeTab === 'FAQ' && <FAQPage />}
             {activeTab === 'HISTORY' && <HistoryPage />}

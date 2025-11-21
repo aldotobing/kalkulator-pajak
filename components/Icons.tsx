@@ -67,7 +67,9 @@ import {
   Plus,
   Trash,
   Download,
-  FileInput
+  FileInput,
+  UserMinus,
+  Wallet
 } from 'lucide-react';
 
 // Custom Sophisticated AI Icon (Admin/Customer Care Persona)
@@ -187,5 +189,7 @@ export {
   Plus,
   Trash,
   Download,
-  FileInput
+  FileInput,
+  UserMinus,
+  Wallet
 };

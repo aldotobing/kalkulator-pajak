@@ -17,7 +17,8 @@ import {
   Car,
   Home,
   Bitcoin,
-  Factory
+  Factory,
+  UserMinus
 } from './Icons';
 
 interface FAQItem {
@@ -65,6 +66,17 @@ const faqData: FAQItem[] = [
     formula: "(Gaji Bruto Setahun - Biaya Jabatan - PTKP) × Tarif Lapisan Pajak",
     legalBasis: "UU HPP No. 7 Tahun 2021 & PP 58 Tahun 2023",
     officialLink: "https://pajak.go.id/index.php/id/pph-pasal-2126"
+  },
+  {
+    id: 'pesangon',
+    title: 'Pajak Pesangon & Pensiun',
+    icon: <UserMinus size={20} className="text-white" />,
+    colorTheme: 'bg-red-600',
+    eli5: "Kalau kamu berhenti kerja (PHK/Pensiun) dan dapat uang 'perpisahan' yang besar sekaligus, uang itu pajaknya beda lho. Kabar baiknya: 50 Juta pertama GRATIS pajak! Sisanya baru kena pajak yang tarifnya lebih ringan daripada gaji biasa.",
+    howItWorks: "Pajak ini bersifat FINAL. Tarifnya bertingkat: 0% (0-50jt), 5% (50-100jt), 15% (100-500jt), 25% (>500jt). Untuk Manfaat Pensiun/JHT, tarifnya cuma 0% dan 5% (diatas 50jt).",
+    formula: "Lapisan Bruto × Tarif Pesangon (0%, 5%, 15%, 25%)",
+    legalBasis: "PP 68 Tahun 2009",
+    officialLink: "https://www.pajak.go.id/id/pph-pasal-21-atas-uang-pesangon"
   },
   {
     id: 'pph_badan',

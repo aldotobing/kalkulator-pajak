@@ -16,7 +16,8 @@ export enum TaxType {
   PPH_BADAN = 'PPH_BADAN',
   TAX_HEALTH = 'TAX_HEALTH',
   COMPARISON = 'COMPARISON',
-  INVOICE = 'INVOICE'
+  INVOICE = 'INVOICE',
+  PESANGON = 'PESANGON'
 }
 
 export enum MaritalStatus {
