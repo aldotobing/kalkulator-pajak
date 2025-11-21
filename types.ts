@@ -41,7 +41,11 @@ export interface PPh21State {
   hasNPWP: boolean;
   payPeriod: 'MONTHLY' | 'ANNUAL';
   includeBiayaJabatan: boolean;
+  includeJKK_JKM: boolean; // Jaminan Kecelakaan Kerja & Kematian
   method: PPh21Method; // Gross vs Gross Up
+  // New fields based on PDF (PMK 168/2023)
+  zakat: number; // Monthly Zakat/Sumbangan Wajib
+  manualPensionFee: number; // Monthly Pension paid by Employee (override auto calc)
 }
 
 export interface PPh21Result {
@@ -54,6 +58,14 @@ export interface PPh21Result {
   annualTax: number;
   monthlyTax: number;
   taxAllowance: number; // Tunjangan Pajak (0 if Gross method)
+  terCategory: string;
+  terRate: number;
+  insuranceAmount: number; // JKK + JKM
+  pensionDeduction: number; // JHT + JP
+  // New fields for December projection
+  taxJanToNov: number;
+  taxDecember: number;
+  grossForTax: number;
 }
 
 export interface PPh23State {

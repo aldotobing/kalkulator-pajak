@@ -9,6 +9,17 @@ export const MAX_CHILDREN = 3;
 export const BIAYA_JABATAN_RATE = 0.05;
 export const MAX_BIAYA_JABATAN_ANNUAL = 6000000;
 
+// BPJS Rates (Standard)
+// Penambah Bruto (Dibayar Perusahaan)
+export const BPJS_JKK_RATE = 0.0024; // 0.24% (Resiko Rendah - Umum)
+export const BPJS_JKM_RATE = 0.0030; // 0.30%
+export const BPJS_KES_COMPANY_RATE = 0.04; // 4% (Optional to implement later, usually JKK/JKM is standard for tax calc example)
+
+// Pengurang Bruto (Dibayar Karyawan)
+export const BPJS_JHT_EMP_RATE = 0.02; // 2%
+export const BPJS_JP_EMP_RATE = 0.01; // 1%
+export const BPJS_JP_CAP_BASE = 10042300; // 2024 Cap for JP
+
 // PPh 21 Brackets (UU HPP)
 export const PPH21_BRACKETS = [
   { limit: 60000000, rate: 0.05 },

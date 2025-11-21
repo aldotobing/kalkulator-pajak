@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { PPh21State, MaritalStatus, TaxType, PPh21Method } from '../types';
 import { calculatePPh21, formatCurrency } from '../services/taxLogic';
 import { saveHistoryItem } from '../services/historyService';
-import { Banknote, User, Calculator, RefreshCw, Info, Save, Check, Printer, Copy, ChevronDown, Check as CheckIcon } from './Icons';
+import { Banknote, User, Calculator, RefreshCw, Info, Save, Check, Printer, Copy, ChevronDown, Check as CheckIcon, CalendarDays, ShieldCheck, Wallet, Heart } from './Icons';
 
 interface Props {
   onContextUpdate: (ctx: string) => void;
@@ -11,14 +11,17 @@ interface Props {
 
 const DEFAULT_FORM_STATE: PPh21State = {
   grossSalary: 15000000,
-  allowance: 500000,
+  allowance: 0,
   thrBonus: 0,
   maritalStatus: MaritalStatus.TK,
   children: 0,
   hasNPWP: true,
   payPeriod: 'MONTHLY',
   includeBiayaJabatan: true,
-  method: PPh21Method.GROSS
+  includeJKK_JKM: false, 
+  method: PPh21Method.GROSS,
+  zakat: 0,
+  manualPensionFee: 0
 };
 
 // Helper for currency input display
@@ -39,6 +42,8 @@ const CalculatorPPH21: React.FC<Props> = ({ onContextUpdate }) => {
     grossSalary: formatNumberInput(DEFAULT_FORM_STATE.grossSalary),
     allowance: formatNumberInput(DEFAULT_FORM_STATE.allowance),
     thrBonus: formatNumberInput(DEFAULT_FORM_STATE.thrBonus),
+    zakat: formatNumberInput(DEFAULT_FORM_STATE.zakat),
+    manualPensionFee: formatNumberInput(DEFAULT_FORM_STATE.manualPensionFee),
   });
 
   useEffect(() => {
@@ -46,23 +51,27 @@ const CalculatorPPH21: React.FC<Props> = ({ onContextUpdate }) => {
     setResult(res);
 
     const ctx = `
-      Kalkulator PPh 21 (Karyawan)
+      Kalkulator PPh 21 (Karyawan - PP 58/2023)
       Metode: ${formState.method === PPh21Method.GROSS ? 'Gross (Potong Gaji)' : 'Gross Up (Ditanggung Kantor)'}
-      Status: ${formState.maritalStatus}/${formState.children}
+      Status: ${formState.maritalStatus}/${formState.children} (TER ${res.terCategory})
       NPWP: ${formState.hasNPWP ? 'Ya' : 'Tidak'}
       Gaji Pokok: ${formatCurrency(formState.grossSalary)}
       Tunjangan: ${formatCurrency(formState.allowance)}
       THR/Bonus: ${formatCurrency(formState.thrBonus)}
       
-      Hasil Perhitungan:
-      ${formState.method === PPh21Method.GROSS_UP ? `Tunjangan Pajak (Gross Up): ${formatCurrency(res.taxAllowance)}` : ''}
-      Penghasilan Bruto (Thn): ${formatCurrency(res.annualGross)}
-      Pengurang (Biaya Jabatan): ${formatCurrency(res.biayaJabatan)}
-      Penghasilan Neto (Thn): ${formatCurrency(res.netIncome)}
-      PTKP: ${formatCurrency(res.ptkp)}
-      PKP: ${formatCurrency(res.pkp)}
+      Pengurang Tahunan:
+      Biaya Jabatan: ${formatCurrency(res.biayaJabatan)}
+      Iuran Pensiun: ${formatCurrency(res.pensionDeduction * 12)}
+      Zakat/Sumbangan: ${formatCurrency(formState.zakat * 12)}
+      
+      Hasil Perhitungan (Bulanan TER):
+      Tarif TER: ${(res.terRate! * 100).toFixed(2)}%
+      ${formState.method === PPh21Method.GROSS_UP ? `Tunjangan Pajak: ${formatCurrency(res.taxAllowance)}` : ''}
+      Pajak Bulan Ini (Jan-Nov): ${formatCurrency(res.monthlyTax)}
+      
+      Estimasi Akhir Tahun (Pasal 17):
       Pajak Terutang (Thn): ${formatCurrency(res.annualTax)}
-      Pajak Per Bulan: ${formatCurrency(res.monthlyTax)}
+      Tagihan Desember (Kurang Bayar): ${formatCurrency(res.taxDecember)}
     `;
     onContextUpdate(ctx);
   }, [formState, onContextUpdate]);
@@ -76,12 +85,16 @@ const CalculatorPPH21: React.FC<Props> = ({ onContextUpdate }) => {
       ...DEFAULT_FORM_STATE,
       grossSalary: 0,
       allowance: 0,
-      thrBonus: 0
+      thrBonus: 0,
+      zakat: 0,
+      manualPensionFee: 0
     });
     setDisplayValues({
       grossSalary: '',
       allowance: '',
-      thrBonus: ''
+      thrBonus: '',
+      zakat: '',
+      manualPensionFee: ''
     });
     setIsSaved(false);
   };
@@ -91,18 +104,15 @@ const CalculatorPPH21: React.FC<Props> = ({ onContextUpdate }) => {
     
     const details = `
 Metode: ${formState.method === PPh21Method.GROSS ? 'Gross' : 'Gross Up'}
-Status: ${formState.maritalStatus}/${formState.children}
-NPWP: ${formState.hasNPWP ? 'Ya' : 'Tidak'}
+Status: ${formState.maritalStatus}/${formState.children} (TER ${result.terCategory})
 Gaji Pokok: ${formatCurrency(formState.grossSalary)}
 Tunjangan: ${formatCurrency(formState.allowance)}
+Zakat: ${formatCurrency(formState.zakat)}
 THR/Bonus: ${formatCurrency(formState.thrBonus)}
 --------------------------------
-${formState.method === PPh21Method.GROSS_UP ? `Tunjangan Pajak: ${formatCurrency(result.taxAllowance)}\n` : ''}Bruto Tahunan: ${formatCurrency(result.annualGross)}
-Biaya Jabatan: ${formatCurrency(result.biayaJabatan)}
-Neto Tahunan: ${formatCurrency(result.netIncome)}
-PTKP: ${formatCurrency(result.ptkp)}
-PKP: ${formatCurrency(result.pkp)}
-Pajak Tahunan: ${formatCurrency(result.annualTax)}
+${formState.method === PPh21Method.GROSS_UP ? `Tunjangan Pajak (Bulanan): ${formatCurrency(result.taxAllowance)}\n` : ''}Pajak TER (${(result.terRate!*100).toFixed(2)}%): ${formatCurrency(result.monthlyTax)}
+Est. Pajak Tahunan: ${formatCurrency(result.annualTax)}
+Pajak Desember (Sisa): ${formatCurrency(result.taxDecember)}
     `.trim();
 
     saveHistoryItem({
@@ -118,19 +128,14 @@ Pajak Tahunan: ${formatCurrency(result.annualTax)}
 
   const handleCopyResult = () => {
     if (!result) return;
-    const thp = formState.method === PPh21Method.GROSS 
-       ? (result.annualGross - result.annualTax) / 12 
-       : (result.annualGross - result.annualTax - result.taxAllowance) / 12 + result.taxAllowance / 12; // Simplifies to just Base Gross / 12 roughly
-       
     const text = `
-Perhitungan PPh 21 ${formState.method === PPh21Method.GROSS ? '(Gross)' : '(Gross Up)'}
+Perhitungan PPh 21 (TER 2024)
 ------------------
-Gaji Pokok: ${formatCurrency(formState.grossSalary)}
+Gaji + Tunjangan: ${formatCurrency(formState.grossSalary + formState.allowance)}
 Status: ${formState.maritalStatus}/${formState.children}
-NPWP: ${formState.hasNPWP ? 'Ya' : 'Tidak'}
-
-${formState.method === PPh21Method.GROSS_UP ? `Tunjangan Pajak: ${formatCurrency(result.taxAllowance)}\n` : ''}Pajak Per Bulan: ${formatCurrency(result.monthlyTax)}
-Pajak Setahun: ${formatCurrency(result.annualTax)}
+${formState.method === PPh21Method.GROSS_UP ? `Tunjangan Pajak: ${formatCurrency(result.taxAllowance)}\n` : ''}
+Pajak Bulan Ini (TER ${(result.terRate!*100).toFixed(2)}%): ${formatCurrency(result.monthlyTax)}
+Estimasi Setahun: ${formatCurrency(result.annualTax)}
     `.trim();
     
     navigator.clipboard.writeText(text);
@@ -146,20 +151,18 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
     const cleanVal = value.replace(/[^0-9]/g, '');
     const formatted = cleanVal ? new Intl.NumberFormat('id-ID').format(parseInt(cleanVal)) : '';
     setDisplayValues(prev => ({ ...prev, [key]: formatted }));
-    handleInputChange(key, cleanVal ? parseInt(cleanVal) : 0);
+    handleInputChange(key as keyof PPh21State, cleanVal ? parseInt(cleanVal) : 0);
   };
 
   if (!result) return null;
 
   // Logic for Take Home Pay Display
-  // Gross: Bruto - Tax
-  // Gross Up: (Base + TaxAllowance) - Tax. Since TaxAllowance ~= Tax, THP ~= Base.
-  const baseAnnualIncome = (formState.grossSalary + formState.allowance) * 12 + formState.thrBonus;
-  const takeHomePayAnnual = formState.method === PPh21Method.GROSS 
-    ? baseAnnualIncome - result.annualTax
-    : baseAnnualIncome; // In Gross Up, tax is covered, so you get full base salary
-  
-  const takeHomePayMonthly = takeHomePayAnnual / 12;
+  const monthlyBase = formState.grossSalary + formState.allowance;
+  const bpjsDeduction = result.pensionDeduction + (Math.min(formState.grossSalary, 12000000) * 0.01); 
+
+  const takeHomePayMonthly = formState.method === PPh21Method.GROSS 
+    ? monthlyBase - result.monthlyTax - bpjsDeduction - formState.zakat
+    : monthlyBase - bpjsDeduction - formState.zakat; 
 
   // Consistent Styles
   const LABEL_STYLE = "block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1";
@@ -179,7 +182,7 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
       <div className="print-only mb-8 border-b-2 border-slate-800 pb-4">
          <div className="flex justify-between items-end">
             <div>
-               <h1 className="text-2xl font-bold text-slate-900">Laporan Perhitungan PPh 21</h1>
+               <h1 className="text-2xl font-bold text-slate-900">Laporan PPh 21 (TER 2024)</h1>
                <p className="text-sm text-slate-500">Dihasilkan oleh PajakKu Pro</p>
             </div>
             <div className="text-right">
@@ -189,7 +192,7 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
          </div>
       </div>
 
-      {/* MAIN CARD - CLEAN CORPORATE STYLE */}
+      {/* MAIN CARD */}
       <div className="rounded-[2rem] bg-white shadow-2xl shadow-slate-200/50 border border-slate-200 overflow-hidden flex flex-col md:flex-row relative">
         
         {/* Left Side: Inputs */}
@@ -206,17 +209,17 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
           </div>
 
           <div className="mb-8 pr-10">
-             <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 tracking-tight">PPh Pasal 21</h2>
+             <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 tracking-tight">PPh Pasal 21 (2025)</h2>
              
              <div className="text-slate-500 text-sm flex items-center gap-1.5 flex-wrap leading-relaxed">
-                <span>Perhitungan pajak penghasilan karyawan.</span>
+                <span>Skema Terbaru: Tarif Efektif Rata-Rata (TER).</span>
                 
                 {/* Tooltip Info TER */}
                 <div className="relative group inline-flex items-center no-print">
                    <Info size={16} className="text-blue-600 cursor-help hover:scale-110 transition-transform" />
                    <div className="absolute left-0 top-full mt-3 w-72 p-4 bg-slate-800 text-white text-xs rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none origin-top-left transform scale-95 group-hover:scale-100">
                       <p className="leading-relaxed">
-                        <strong>Info TER 2024:</strong> Kalkulator ini menggunakan metode setahun penuh untuk estimasi yang lebih akurat di akhir tahun pajak. Potongan bulanan riil mungkin menggunakan Tarif Efektif Rata-rata (TER) sesuai PP 58/2023.
+                        <strong>Info TER (PP 58/2023):</strong> Untuk periode Januari s.d. November, pajak dihitung menggunakan Tarif Efektif berdasarkan penghasilan bruto bulanan. Bulan Desember dihitung ulang menggunakan Tarif Pasal 17 (Setahun).
                       </p>
                       <div className="absolute bottom-full left-1.5 border-8 border-transparent border-b-slate-800"></div>
                    </div>
@@ -228,21 +231,19 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
             
             {/* Method Selector */}
             <div>
-               <label className={LABEL_STYLE}>Metode Perhitungan</label>
+               <label className={LABEL_STYLE}>METODE PEMBAYARAN</label>
                <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-200 relative">
                   <button 
                      onClick={() => handleInputChange('method', PPh21Method.GROSS)}
                      className={`flex-1 py-2.5 rounded-lg text-xs md:text-sm font-bold transition-all duration-300 relative z-10 ${formState.method === PPh21Method.GROSS ? 'text-blue-700 bg-white shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                     Metode Gross
-                     <span className="block text-[9px] font-medium opacity-70">Gaji Dipotong Pajak</span>
+                     Gross (Potong Gaji)
                   </button>
                   <button 
                      onClick={() => handleInputChange('method', PPh21Method.GROSS_UP)}
                      className={`flex-1 py-2.5 rounded-lg text-xs md:text-sm font-bold transition-all duration-300 relative z-10 ${formState.method === PPh21Method.GROSS_UP ? 'text-blue-700 bg-white shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                     Metode Gross Up
-                     <span className="block text-[9px] font-medium opacity-70">Pajak Ditanggung Kantor</span>
+                     Gross Up (Tunjangan)
                   </button>
                </div>
             </div>
@@ -251,7 +252,7 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
 
             {/* Salary Input */}
             <div>
-              <label className={LABEL_STYLE}>Gaji Pokok (Per Bulan)</label>
+              <label className={LABEL_STYLE}>GAJI POKOK (PER BULAN)</label>
               <div className={INPUT_CONTAINER_STYLE}>
                 <span className={INPUT_ICON_STYLE}>Rp</span>
                 <input
@@ -268,7 +269,7 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
             {/* Allowance & Bonus Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                <div>
-                  <label className={LABEL_STYLE}>Tunjangan (Per Bulan)</label>
+                  <label className={LABEL_STYLE}>TUNJANGAN (PER BULAN)</label>
                   <div className={INPUT_CONTAINER_STYLE}>
                     <span className={INPUT_ICON_STYLE}>Rp</span>
                     <input
@@ -282,7 +283,7 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
                   </div>
                </div>
                <div>
-                  <label className={LABEL_STYLE}>THR / Bonus (Tahunan)</label>
+                  <label className={LABEL_STYLE}>THR / BONUS (TAHUNAN)</label>
                   <div className={INPUT_CONTAINER_STYLE}>
                     <span className={INPUT_ICON_STYLE}>Rp</span>
                     <input
@@ -296,37 +297,73 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
                   </div>
                </div>
             </div>
-            
-            <div className="h-px bg-slate-100 my-6"></div>
 
-            {/* Status & Family - Segmented Controls */}
+            <div className="h-px bg-slate-100 my-2"></div>
+
+            {/* Deductions Grid (Manual Inputs) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <div>
+                  <label className={LABEL_STYLE}>IURAN PENSIUN (DIBAYAR SENDIRI)</label>
+                  <div className={INPUT_CONTAINER_STYLE}>
+                    <span className={INPUT_ICON_STYLE}><Wallet size={14}/></span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={displayValues.manualPensionFee}
+                      onChange={(e) => handleNumberChange('manualPensionFee', e.target.value)}
+                      className={INPUT_FIELD_STYLE}
+                      placeholder="Auto (BPJS 3%)"
+                    />
+                  </div>
+                  <p className="text-[9px] text-slate-400 mt-1 ml-1">*Kosongkan untuk hitung otomatis.</p>
+               </div>
+               <div>
+                  <label className={LABEL_STYLE}>ZAKAT / SUMBANGAN WAJIB (BULAN)</label>
+                  <div className={INPUT_CONTAINER_STYLE}>
+                    <span className={INPUT_ICON_STYLE}><Heart size={14}/></span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={displayValues.zakat}
+                      onChange={(e) => handleNumberChange('zakat', e.target.value)}
+                      className={INPUT_FIELD_STYLE}
+                      placeholder="0"
+                    />
+                  </div>
+                  <p className="text-[9px] text-slate-400 mt-1 ml-1">*Pengurang pajak setahun (Desember).</p>
+               </div>
+            </div>
+            
+            <div className="h-px bg-slate-100 my-4"></div>
+
+            {/* Status & Family */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label className={LABEL_STYLE}>Status Perkawinan</label>
+                    <label className={LABEL_STYLE}>STATUS PERKAWINAN</label>
                     <div className={SELECTOR_CONTAINER_STYLE}>
                     <button 
                         onClick={() => handleInputChange('maritalStatus', MaritalStatus.TK)}
                         className={SELECTOR_BTN_STYLE(formState.maritalStatus === MaritalStatus.TK)}
                     >
-                        TK (Lajang)
+                        TK
                     </button>
                     <button 
                         onClick={() => handleInputChange('maritalStatus', MaritalStatus.K)}
                         className={SELECTOR_BTN_STYLE(formState.maritalStatus === MaritalStatus.K)}
                     >
-                        K (Nikah)
+                        K
                     </button>
                     <button 
                         onClick={() => handleInputChange('maritalStatus', MaritalStatus.HB)}
                         className={SELECTOR_BTN_STYLE(formState.maritalStatus === MaritalStatus.HB)}
                     >
-                        HB (Pisah)
+                        HB
                     </button>
                     </div>
                 </div>
                 
                 <div>
-                    <label className={LABEL_STYLE}>Jumlah Tanggungan</label>
+                    <label className={LABEL_STYLE}>JUMLAH TANGGUNGAN</label>
                     <div className={SELECTOR_CONTAINER_STYLE}>
                     {[0, 1, 2, 3].map(num => (
                         <button
@@ -341,45 +378,19 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
                 </div>
             </div>
             
-            {/* Toggles - Clean Selection Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 no-print">
-               {/* NPWP Toggle */}
+            {/* NPWP Toggle */}
+            <div className="grid grid-cols-1 mt-4 no-print">
                <button
                   className={TOGGLE_STYLE(formState.hasNPWP)}
                   onClick={() => handleInputChange('hasNPWP', !formState.hasNPWP)}
                >
-                  <div className="w-full">
+                  <div className="w-full flex justify-between items-center">
                      <span className={`font-bold text-sm block ${formState.hasNPWP ? 'text-blue-800' : 'text-slate-600'}`}>Ada NPWP</span>
+                     <span className={`text-[10px] font-medium ${formState.hasNPWP ? 'text-blue-600' : 'text-slate-400'}`}>
+                        {formState.hasNPWP ? 'Tarif Normal' : 'Tarif +20%'}
+                     </span>
                   </div>
-                  <span className={`text-[10px] font-medium ${formState.hasNPWP ? 'text-blue-600' : 'text-slate-400'}`}>
-                     {formState.hasNPWP ? 'Tarif Normal' : 'Sanksi +20%'}
-                  </span>
                </button>
-
-               {/* Biaya Jabatan Toggle */}
-               <button
-                  className={TOGGLE_STYLE(formState.includeBiayaJabatan)}
-                  onClick={() => handleInputChange('includeBiayaJabatan', !formState.includeBiayaJabatan)}
-               >
-                  <div className="w-full">
-                     <span className={`font-bold text-sm block ${formState.includeBiayaJabatan ? 'text-blue-800' : 'text-slate-600'}`}>Biaya Jabatan</span>
-                  </div>
-                  <span className={`text-[10px] font-medium ${formState.includeBiayaJabatan ? 'text-blue-600' : 'text-slate-400'}`}>
-                     Otomatis 5%
-                  </span>
-               </button>
-            </div>
-            
-            {/* Print only status details */}
-            <div className="print-only grid grid-cols-2 gap-4 mt-4 border-t border-slate-100 pt-4">
-                <div>
-                   <span className="text-xs font-bold uppercase text-slate-400">Status NPWP</span>
-                   <p className="font-bold">{formState.hasNPWP ? 'Memiliki NPWP' : 'Tidak Ada NPWP'}</p>
-                </div>
-                <div>
-                   <span className="text-xs font-bold uppercase text-slate-400">Status Tanggungan</span>
-                   <p className="font-bold">{formState.maritalStatus} / {formState.children}</p>
-                </div>
             </div>
 
           </div>
@@ -388,7 +399,7 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
         {/* Right Side: Result (Clean Dark Theme) */}
         <div className="md:w-5/12 bg-slate-900 text-white p-8 md:p-10 flex flex-col justify-between relative overflow-hidden">
             
-            {/* Subtle Gradient - Not distracting */}
+            {/* Subtle Gradient */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none"></div>
 
             <div className="relative z-10 space-y-8">
@@ -409,34 +420,34 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
                    </div>
                    <span className="text-xs text-slate-500 font-bold uppercase">/bln</span>
                 </div>
+                <p className="text-[10px] text-slate-500 mt-2">*Net = Gaji - Pajak (TER) - BPJS Karyawan - Zakat</p>
               </div>
 
               <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50 space-y-4">
+                 
+                 {formState.method === PPh21Method.GROSS_UP && (
+                    <div className="flex justify-between items-center pb-3 border-b border-slate-700 mb-3">
+                       <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">Tunjangan Pajak (Gross Up)</span>
+                       <span className="text-base font-bold text-emerald-400">+ {formatCurrency(result.taxAllowance)}</span>
+                    </div>
+                 )}
+
                  <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pajak Per Bulan</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Potongan Bulan Ini (TER)</p>
                     <span className="text-2xl font-bold text-white">{formatCurrency(result.monthlyTax)}</span>
                  </div>
                  <div className="h-px bg-slate-700"></div>
                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400 font-medium text-sm">Pajak Setahun</span>
-                    <span className="text-lg font-bold text-white">{formatCurrency(result.annualTax)}</span>
+                    <span className="text-slate-400 font-medium text-sm">Kategori TER {result.terCategory}</span>
+                    <span className="text-lg font-bold text-white">{(result.terRate!*100).toFixed(2)}%</span>
                  </div>
               </div>
 
               <div className="space-y-3 text-sm pt-2">
-                 {formState.method === PPh21Method.GROSS_UP && (
-                   <div className="flex justify-between items-center text-emerald-400 font-bold pb-2 border-b border-slate-800">
-                      <span className="font-medium">Tunjangan Pajak</span>
-                      <span>+ {formatCurrency(result.taxAllowance)}</span>
-                   </div>
-                 )}
+                 <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Estimasi Akhir Tahun (Pasal 17)</p>
                  <div className="flex justify-between items-center text-slate-400">
-                    <span className="font-medium">Penghasilan Neto</span>
-                    <span className="font-bold text-slate-200">{formatCurrency(result.netIncome)}</span>
-                 </div>
-                 <div className="flex justify-between items-center text-slate-400">
-                    <span className="font-medium">PTKP</span>
-                    <span className="font-bold text-slate-200">{formatCurrency(result.ptkp)}</span>
+                    <span className="font-medium">Total Pajak Setahun</span>
+                    <span className="font-bold text-slate-200">{formatCurrency(result.annualTax)}</span>
                  </div>
               </div>
             </div>
@@ -468,7 +479,7 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
                <div className="p-2 bg-blue-50 text-blue-600 rounded-lg border border-blue-100">
                   <Info size={18}/>
                </div>
-               <h4 className="text-xl md:text-2xl font-bold text-slate-900">Rincian Perhitungan</h4>
+               <h4 className="text-xl md:text-2xl font-bold text-slate-900">Rincian Perhitungan (PP 58/2023)</h4>
             </div>
             <div className={`p-2 rounded-full border transition-all duration-300 ${showDetail ? 'rotate-180 bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-200 text-slate-400'}`}>
                <ChevronDown size={16} />
@@ -478,150 +489,145 @@ Pajak Setahun: ${formatCurrency(result.annualTax)}
          {showDetail && (
             <div className="px-6 md:px-8 pb-8 space-y-6 animate-enter">
                
-               {/* Logic Explanation Block */}
                <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 mb-6">
                   <h5 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
                      <Info size={16} className="text-blue-600"/>
-                     Metode Perhitungan ({formState.method === PPh21Method.GROSS ? 'Gross' : 'Gross Up'})
+                     Skema Pemotongan
                   </h5>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-3">
-                     {formState.method === PPh21Method.GROSS 
-                       ? 'Pajak dipotong langsung dari gaji karyawan (Net Salary lebih kecil dari Gross).' 
-                       : 'Perusahaan memberikan Tunjangan Pajak sebesar nilai pajak, sehingga karyawan menerima gaji utuh (Take Home Pay = Basic Salary).'}
-                  </p>
-                  <ol className="list-decimal list-inside text-sm text-slate-600 space-y-1 font-medium">
-                     {formState.method === PPh21Method.GROSS_UP && (
-                       <li>Hitung Tunjangan Pajak secara iteratif hingga nilai Tunjangan = Nilai Pajak.</li>
-                     )}
-                     <li>Penghasilan Bruto = Gaji + Tunjangan {formState.method === PPh21Method.GROSS_UP && '+ Tunjangan Pajak'}.</li>
-                     <li>Dikurangi <strong>Biaya Jabatan</strong> & PTKP untuk mendapatkan PKP.</li>
-                     <li>PKP dikalikan tarif progresif.</li>
-                  </ol>
+                  <ul className="text-sm text-slate-600 leading-relaxed mb-3 list-disc list-inside space-y-1">
+                     <li><strong>Januari - November:</strong> Menggunakan Tarif Efektif Rata-Rata (TER) Bulanan. Cukup dikalikan Penghasilan Bruto sebulan.</li>
+                     <li><strong>Desember:</strong> Menggunakan Tarif Pasal 17 Setahun (Dihitung ulang). Pajak Desember = Pajak Setahun dikurangi yang sudah dibayar Jan-Nov.</li>
+                  </ul>
                </div>
 
                {/* Step 1: Bruto */}
                <div className="relative pl-6 border-l-2 border-slate-100">
                   <div className="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-slate-300 border-2 border-white"></div>
-                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">1. Penghasilan Bruto Setahun</h5>
+                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">1. Penghasilan Bruto Sebulan</h5>
                   <div className="bg-slate-50 p-5 rounded-xl text-sm font-medium text-slate-600 flex flex-col gap-2 border border-slate-200">
                      <div className="flex justify-between items-center">
-                        <span>Gaji ({formatCurrency(formState.grossSalary)} × 12)</span>
-                        <span className="font-bold text-slate-700">{formatCurrency(formState.grossSalary * 12)}</span>
+                        <span>Gaji Pokok</span>
+                        <span className="font-bold text-slate-700">{formatCurrency(formState.grossSalary)}</span>
                      </div>
                      <div className="flex justify-between items-center">
-                        <span>Tunjangan ({formatCurrency(formState.allowance)} × 12)</span>
-                        <span className="font-bold text-slate-700">{formatCurrency(formState.allowance * 12)}</span>
+                        <span>Tunjangan</span>
+                        <span className="font-bold text-slate-700">{formatCurrency(formState.allowance)}</span>
                      </div>
-                     <div className="flex justify-between items-center mb-1">
-                        <span>THR / Bonus</span>
-                        <span className="font-bold text-slate-700">{formatCurrency(formState.thrBonus)}</span>
-                     </div>
+                     
+                     {result.insuranceAmount > 0 && (
+                        <div className="flex justify-between items-center">
+                           <span>Premi JKK/JKM (Perusahaan)</span>
+                           <span className="font-bold text-slate-700">{formatCurrency(result.insuranceAmount)}</span>
+                        </div>
+                     )}
+
                      {formState.method === PPh21Method.GROSS_UP && (
-                       <div className="flex justify-between items-center border-b border-slate-200 pb-2 mb-1 text-blue-600">
-                          <span>+ Tunjangan Pajak (Gross Up)</span>
+                       <div className="flex justify-between items-center border-b border-slate-200 pb-2 mb-1 text-emerald-600">
+                          <span>+ Tunjangan PPh (Gross Up)</span>
                           <span className="font-bold">{formatCurrency(result.taxAllowance)}</span>
                        </div>
                      )}
+                     
                      <div className="flex justify-between font-bold text-slate-900 text-base pt-1">
-                        <span>Total Bruto</span>
-                        <span>{formatCurrency(result.annualGross)}</span>
+                        <span>Bruto Pajak (Basis TER)</span>
+                        <span>{formatCurrency(result.grossForTax)}</span>
                      </div>
                   </div>
                </div>
 
-               {/* Step 2: Pengurang */}
+               {/* Step 2: Tarif TER */}
                <div className="relative pl-6 border-l-2 border-slate-100">
                   <div className="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-slate-300 border-2 border-white"></div>
-                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">2. Pengurang</h5>
-                  <div className="bg-slate-50 p-5 rounded-xl text-sm font-medium text-slate-600 flex flex-col gap-2 border border-slate-200">
-                     <div className="flex justify-between text-red-500 font-medium">
-                        <span>Biaya Jabatan (5% Max 6Jt)</span>
-                        <span>- {formatCurrency(result.biayaJabatan)}</span>
-                     </div>
-                     <div className="flex justify-between font-bold text-slate-900 text-base mt-1 border-t border-slate-200 pt-3">
-                        <span>Penghasilan Neto (Bruto - Biaya)</span>
-                        <span>{formatCurrency(result.netIncome)}</span>
-                     </div>
-                  </div>
-               </div>
-
-               {/* Step 3: PKP */}
-               <div className="relative pl-6 border-l-2 border-slate-100">
-                  <div className="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-slate-300 border-2 border-white"></div>
-                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">3. Penghasilan Kena Pajak (PKP)</h5>
+                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">2. Penentuan Tarif (Kategori {result.terCategory})</h5>
                   <div className="bg-slate-50 p-5 rounded-xl text-sm font-medium text-slate-600 flex flex-col gap-2 border border-slate-200">
                      <div className="flex justify-between items-center">
-                        <span>Neto Setahun</span>
-                        <span className="font-bold text-slate-700">{formatCurrency(result.netIncome)}</span>
+                        <span>Status PTKP</span>
+                        <span className="font-bold text-slate-700">{formState.maritalStatus}/{formState.children}</span>
                      </div>
-                     <div className="flex justify-between text-green-600 font-medium">
+                     <div className="flex justify-between items-center">
+                        <span>Masuk Kategori</span>
+                        <span className="font-bold text-blue-600">TER {result.terCategory}</span>
+                     </div>
+                     <div className="flex justify-between font-bold text-slate-900 text-base border-t border-slate-200 pt-3 mt-1">
+                        <span>Tarif Efektif (Jan-Nov)</span>
+                        <span>{(result.terRate! * 100).toFixed(2)}%</span>
+                     </div>
+                  </div>
+               </div>
+
+               {/* Step 3: Monthly Tax */}
+               <div className="relative pl-6 border-l-2 border-slate-100 pt-2">
+                  <div className="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-slate-300 border-2 border-white"></div>
+                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">3. Pajak Bulan Ini (Bruto x TER)</h5>
+                  <div className="bg-blue-50 p-5 rounded-xl text-sm font-medium text-slate-600 flex flex-col gap-2 border border-blue-100">
+                     <div className="flex justify-between items-center border-t border-blue-200 pt-3 mt-1">
+                        <span className="text-blue-800 font-bold">PPh 21 Bulan Ini</span>
+                        <span className="font-black text-blue-700 text-lg">{formatCurrency(result.monthlyTax)}</span>
+                     </div>
+                  </div>
+               </div>
+
+               {/* Step 4: Annual Calculation */}
+               <div className="relative pl-6 border-l-2 border-slate-100 pt-2">
+                  <div className="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-amber-300 border-2 border-white"></div>
+                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                     <CalendarDays size={12}/>
+                     4. Simulasi Akhir Tahun (Desember) - Pasal 17
+                  </h5>
+                  <div className="bg-amber-50 p-5 rounded-xl text-sm font-medium text-slate-600 flex flex-col gap-2 border border-amber-100">
+                     <p className="text-[10px] text-slate-500 italic mb-2">
+                        Di bulan Desember, pajak dihitung ulang setahun penuh dikurangi yang sudah disetor Jan-Nov.
+                     </p>
+                     
+                     <div className="flex justify-between items-center border-b border-amber-200 pb-2 mb-1">
+                        <span>Penghasilan Bruto Setahun</span>
+                        <span className="font-bold text-slate-800">{formatCurrency(result.annualGross)}</span>
+                     </div>
+
+                     {/* Deductions Detail */}
+                     <div className="pl-2 text-xs space-y-1 mb-2">
+                        <div className="flex justify-between text-red-500">
+                           <span>- Biaya Jabatan (5% Max 6jt)</span>
+                           <span>{formatCurrency(result.biayaJabatan)}</span>
+                        </div>
+                        <div className="flex justify-between text-red-500">
+                           <span>- Iuran Pensiun Setahun</span>
+                           <span>{formatCurrency(result.pensionDeduction * 12)}</span>
+                        </div>
+                        {formState.zakat > 0 && (
+                           <div className="flex justify-between text-red-500">
+                              <span>- Zakat/Sumbangan Setahun</span>
+                              <span>{formatCurrency(formState.zakat * 12)}</span>
+                           </div>
+                        )}
+                     </div>
+
+                     <div className="flex justify-between items-center">
+                        <span>Penghasilan Neto</span>
+                        <span className="font-bold text-slate-800">{formatCurrency(result.netIncome)}</span>
+                     </div>
+                     <div className="flex justify-between items-center text-green-600">
                         <span>PTKP ({formState.maritalStatus}/{formState.children})</span>
                         <span>- {formatCurrency(result.ptkp)}</span>
                      </div>
-                     <div className="flex justify-between font-bold text-slate-900 text-base mt-1 border-t border-slate-200 pt-3">
-                        <span>PKP (Neto - PTKP)</span>
+                     <div className="flex justify-between items-center font-bold text-slate-900">
+                        <span>PKP (Penghasilan Kena Pajak)</span>
                         <span>{formatCurrency(result.pkp)}</span>
                      </div>
-                  </div>
-               </div>
 
-               {/* Step 4: Layers */}
-               <div className="relative pl-6 border-l-2 border-slate-100 pb-2">
-                  <div className="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-slate-300 border-2 border-white"></div>
-                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">4. Perhitungan Pajak Bertingkat</h5>
-                  <div className="space-y-2">
-                    {result.taxLayers.map((layer, idx) => (
-                       <div key={idx} className="bg-slate-50 p-4 rounded-lg border border-slate-200 flex justify-between items-center text-sm">
-                          <div className="flex flex-col">
-                             <span className="font-bold text-blue-600">Lapisan {idx + 1} ({layer.layer})</span>
-                             <span className="text-xs text-slate-500">Tarif {layer.layer} dari PKP parsial</span>
-                          </div>
-                          <span className="font-bold text-slate-800">{formatCurrency(layer.amount)}</span>
-                       </div>
-                    ))}
-                  </div>
-                  
-                  {!formState.hasNPWP && (
-                    <div className="mt-4 bg-red-50 border border-red-100 p-4 rounded-lg flex items-start gap-3">
-                       <div className="text-red-500 mt-0.5"><Info size={16} /></div>
-                       <div>
-                          <p className="text-sm font-bold text-red-700">Sanksi Tidak Memiliki NPWP (+20%)</p>
-                          <p className="text-xs text-red-600 mt-1">Karena tidak memiliki NPWP, pajak terutang ditambah 20% dari total perhitungan normal.</p>
-                       </div>
-                    </div>
-                  )}
-               </div>
+                     <div className="h-px bg-amber-200 my-2"></div>
 
-               {/* Step 5: Take Home Pay (New) */}
-               <div className="relative pl-6 border-l-2 border-slate-100 pt-2">
-                  <div className="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-slate-300 border-2 border-white"></div>
-                  <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">5. Gaji Bersih (Take Home Pay)</h5>
-                  <div className="bg-emerald-50 p-5 rounded-xl text-sm font-medium text-slate-600 flex flex-col gap-2 border border-emerald-100">
                      <div className="flex justify-between items-center">
-                        <span>Total Bruto (Setahun)</span>
-                        <span className="font-bold text-slate-700">{formatCurrency(result.annualGross)}</span>
+                        <span>Total Pajak Setahun (Pasal 17)</span>
+                        <span className="font-bold text-slate-800">{formatCurrency(result.annualTax)}</span>
                      </div>
-                     <div className="flex justify-between text-red-500 font-medium">
-                        <span>Pajak Terutang (Setahun)</span>
-                        <span>- {formatCurrency(result.annualTax)}</span>
+                     <div className="flex justify-between items-center text-emerald-600">
+                        <span>Sudah Bayar (Jan-Nov)</span>
+                        <span>- {formatCurrency(result.taxJanToNov)}</span>
                      </div>
-                     {formState.method === PPh21Method.GROSS && (
-                       <div className="flex justify-between text-slate-400 text-xs italic">
-                          <span>*Metode Gross: Pajak mengurangi gaji</span>
-                       </div>
-                     )}
-                     {formState.method === PPh21Method.GROSS_UP && (
-                        <div className="flex justify-between text-slate-500 text-xs italic border-t border-emerald-100 pt-2 mt-1">
-                           <span>*Metode Gross Up: Tunjangan Pajak ({formatCurrency(result.taxAllowance)}) membayar Pajak ({formatCurrency(result.annualTax)})</span>
-                        </div>
-                     )}
-                     <div className="flex justify-between font-bold text-emerald-700 text-base mt-1 border-t border-emerald-200 pt-3">
-                        <span>Gaji Bersih Setahun</span>
-                        <span>{formatCurrency(takeHomePayAnnual)}</span>
-                     </div>
-                     <div className="flex justify-between font-bold text-emerald-600 text-sm">
-                        <span>Gaji Bersih Per Bulan</span>
-                        <span>{formatCurrency(takeHomePayMonthly)}</span>
+                     <div className="flex justify-between items-center border-t border-amber-200 pt-3 mt-1">
+                        <span className="text-amber-800 font-bold">Pajak Desember (Sisa)</span>
+                        <span className="font-black text-amber-700 text-lg">{formatCurrency(result.taxDecember)}</span>
                      </div>
                   </div>
                </div>

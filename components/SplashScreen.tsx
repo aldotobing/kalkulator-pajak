@@ -1,12 +1,6 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calculator } from 'lucide-react';
-
-declare global {
-  interface Window {
-    turnstile?: any;
-  }
-}
 
 interface Props {
   onFinish: () => void;
@@ -17,106 +11,22 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
   const [showText, setShowText] = useState(false);
   const [showBadge, setShowBadge] = useState(false);
 
-  // Turnstile State
-  const [isVerified, setIsVerified] = useState(false);
-  const [animationDone, setAnimationDone] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const widgetIdRef = useRef<string | null>(null);
-
-  // 1. Animation Sequence
+  // Animation Sequence
   useEffect(() => {
     const textTimer = setTimeout(() => setShowText(true), 200);
     const badgeTimer = setTimeout(() => setShowBadge(true), 400);
-    const minWaitTimer = setTimeout(() => setAnimationDone(true), 1000); // Minimum logo view time
-
-    // Failsafe: If Turnstile fails to load (adblocker/network/error), let user in after 5s
-    const failsafeTimer = setTimeout(() => {
-      if (!isVerified) {
-        console.warn("[Turnstile] Failsafe triggered (Timeout after 5s)");
-        setIsVerified(true);
-      }
-    }, 5000);
+    
+    // Auto exit after 2.5 seconds
+    const exitTimer = setTimeout(() => setIsExiting(true), 2500);
+    const finishTimer = setTimeout(onFinish, 3200); // Wait for exit animation
 
     return () => {
       clearTimeout(textTimer);
       clearTimeout(badgeTimer);
-      clearTimeout(minWaitTimer);
-      clearTimeout(failsafeTimer);
+      clearTimeout(exitTimer);
+      clearTimeout(finishTimer);
     };
-  }, [isVerified]);
-
-  // 2. Render Turnstile with Robust Error Handling
-  useEffect(() => {
-    console.log('[Turnstile] Starting render attempt...');
-    let attempts = 0;
-    const checkInterval = setInterval(() => {
-      attempts++;
-      console.log(`[Turnstile] Check attempt ${attempts}, window.turnstile:`, !!window.turnstile, 'containerRef:', !!containerRef.current);
-
-      if (window.turnstile && containerRef.current) {
-        clearInterval(checkInterval);
-        console.log('[Turnstile] Script loaded, attempting to render widget...');
-
-        // Prevent double rendering (React Strict Mode fix)
-        if (widgetIdRef.current) {
-          console.log('[Turnstile] Widget already exists, skipping render');
-          return;
-        }
-        if (containerRef.current.innerHTML !== '') {
-          console.log('[Turnstile] Container not empty, skipping render');
-          return;
-        }
-
-        try {
-          const id = window.turnstile.render(containerRef.current, {
-            sitekey: '0x4AAAAAABe3cRiTdtHdktvC', // Verified Site Key
-            theme: 'dark',
-            callback: function (token: string) {
-              console.log('[Turnstile] Verification successful!', token.substring(0, 20) + '...');
-              setIsVerified(true);
-            },
-            'error-callback': function (err: any) {
-              console.warn("[Turnstile] Error callback triggered:", err);
-              setIsVerified(true);
-            }
-          });
-          widgetIdRef.current = id;
-          console.log('[Turnstile] Widget rendered successfully with ID:', id);
-        } catch (e: any) {
-          const msg = e?.message || String(e);
-          console.error("[Turnstile] Render exception:", msg, e);
-          // Even if it crashes due to frame blocking, we let the user in
-          setIsVerified(true);
-        }
-      }
-    }, 100);
-
-    return () => {
-      clearInterval(checkInterval);
-      if (widgetIdRef.current && window.turnstile) {
-        try {
-          console.log('[Turnstile] Cleaning up widget:', widgetIdRef.current);
-          window.turnstile.remove(widgetIdRef.current);
-          widgetIdRef.current = null;
-        } catch (e) {
-          console.warn('[Turnstile] Cleanup error:', e);
-        }
-      }
-    };
-  }, []);
-
-  // 3. Exit Logic: Must be both Animation Done AND Verified
-  useEffect(() => {
-    if (animationDone && isVerified && !isExiting) {
-      const exitTimer = setTimeout(() => setIsExiting(true), 200); // Slight delay after verify
-      const finishTimer = setTimeout(onFinish, 800); // Wait for exit animation
-
-      return () => {
-        clearTimeout(exitTimer);
-        clearTimeout(finishTimer);
-      };
-    }
-  }, [animationDone, isVerified, isExiting, onFinish]);
+  }, [onFinish]);
 
   return (
     <div
@@ -160,28 +70,6 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
               Smart Tax Calculator
             </span>
           </div>
-        </div>
-
-        {/* Turnstile Widget Container */}
-        <div className={`mt-12 transition-all duration-1000 ${showBadge ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          {/* Keep Turnstile visible until verified */}
-          <div
-            ref={containerRef}
-            className={`min-h-[65px] min-w-[300px] flex justify-center transition-opacity duration-300 ${isVerified ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}
-          ></div>
-
-          {/* Status Messages */}
-          {!isVerified && (
-            <p className="text-[10px] text-slate-500 mt-2 text-center animate-pulse">Verifying Security...</p>
-          )}
-          {isVerified && (
-            <div className="flex items-center justify-center gap-2 mt-2 animate-scale-in">
-              <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <p className="text-sm font-medium text-green-400">Verified</p>
-            </div>
-          )}
         </div>
       </div>
 
