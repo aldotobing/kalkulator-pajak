@@ -56,7 +56,18 @@ import {
   Landmark,
   CreditCard,
   Factory,
-  PieChart
+  PieChart,
+  Activity,
+  ShieldCheck,
+  ShieldAlert,
+  Stethoscope,
+  Scale,
+  Award,
+  Crown,
+  Plus,
+  Trash,
+  Download,
+  FileInput
 } from 'lucide-react';
 
 // Custom Sophisticated AI Icon (Admin/Customer Care Persona)
@@ -165,5 +176,16 @@ export {
   Landmark,
   CreditCard,
   Factory,
-  PieChart
+  PieChart,
+  Activity,
+  ShieldCheck,
+  ShieldAlert,
+  Stethoscope,
+  Scale,
+  Award,
+  Crown,
+  Plus,
+  Trash,
+  Download,
+  FileInput
 };

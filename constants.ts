@@ -204,6 +204,16 @@ export const PPH_BADAN_THRESHOLDS = {
   FACILITY_LIMIT: 50000000000 // 50 Miliar
 };
 
+// Tax Health Benchmarks (Approximate Safe Ranges for NPM/Net Profit Margin)
+// Reference: SE-96/PJ/2009 (Benchmarking Ratio) - Simplified for app
+export const INDUSTRY_BENCHMARKS = [
+  { id: 'TRADE', label: 'Perdagangan (Trading)', safeMin: 0.02, safeMax: 0.08, desc: 'Distributor, Retail, Toko' },
+  { id: 'MANUFACTURING', label: 'Manufaktur / Pabrik', safeMin: 0.05, safeMax: 0.15, desc: 'Produksi Barang' },
+  { id: 'SERVICE', label: 'Jasa / Agency', safeMin: 0.10, safeMax: 0.30, desc: 'Konsultan, IT, Jasa Pro' },
+  { id: 'CONSTRUCTION', label: 'Konstruksi', safeMin: 0.03, safeMax: 0.10, desc: 'Kontraktor Sipil' },
+  { id: 'FNB', label: 'F&B / Restoran', safeMin: 0.10, safeMax: 0.25, desc: 'Cafe, Katering' },
+];
+
 // Tax Codes Directory (KAP & KJS)
 export interface TaxCodeItem {
   kap: string;

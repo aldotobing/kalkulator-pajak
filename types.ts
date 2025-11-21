@@ -13,7 +13,10 @@ export enum TaxType {
   PKB = 'PKB',
   BPHTB = 'BPHTB',
   INVESTMENT = 'INVESTMENT',
-  PPH_BADAN = 'PPH_BADAN'
+  PPH_BADAN = 'PPH_BADAN',
+  TAX_HEALTH = 'TAX_HEALTH',
+  COMPARISON = 'COMPARISON',
+  INVOICE = 'INVOICE'
 }
 
 export enum MaritalStatus {
