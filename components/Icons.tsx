@@ -69,7 +69,10 @@ import {
   Download,
   FileInput,
   UserMinus,
-  Wallet
+  Wallet,
+  FileSignature,
+  Feather,
+  Mail
 } from 'lucide-react';
 
 // Custom Sophisticated AI Icon (Admin/Customer Care Persona)
@@ -191,5 +194,8 @@ export {
   Download,
   FileInput,
   UserMinus,
-  Wallet
+  Wallet,
+  FileSignature,
+  Feather,
+  Mail
 };
