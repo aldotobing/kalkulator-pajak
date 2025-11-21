@@ -16,7 +16,8 @@ import {
   Percent,
   Building2,
   Gem,
-  History
+  History,
+  Hash
 } from './components/Icons';
 import CalculatorPPH21 from './components/CalculatorPPH21';
 import CalculatorPPH23 from './components/CalculatorPPH23';
@@ -27,6 +28,7 @@ import CalculatorBeaCukai from './components/CalculatorBeaCukai';
 import CalculatorNPPN from './components/CalculatorNPPN';
 import CalculatorSanksi from './components/CalculatorSanksi';
 import SimulatorSalary from './components/SimulatorSalary';
+import TaxCodeFinder from './components/TaxCodeFinder';
 import FAQPage from './components/FAQPage';
 import HistoryPage from './components/HistoryPage';
 import TaxCalendar from './components/TaxCalendar';
@@ -34,7 +36,7 @@ import { AIWidget } from './components/AIWidget';
 import { SplashScreen } from './components/SplashScreen';
 
 // Type for Active Tab
-type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'SIMULATION' | 'CALENDAR' | 'FAQ' | 'HISTORY';
+type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'SIMULATION' | 'TAX_CODES' | 'CALENDAR' | 'FAQ' | 'HISTORY';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true); // Splash Screen State
@@ -190,7 +192,7 @@ const App: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center gap-3 ml-auto pr-2">
             <span className="text-xs font-bold text-blue-600 bg-blue-50/80 backdrop-blur px-3 py-1.5 rounded-full border border-blue-100 shadow-sm truncate max-w-[120px]">
-              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'SIMULATION' ? 'Simulasi Gaji' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : 'Info')}
+              {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'SIMULATION' ? 'Simulasi Gaji' : activeTab === 'TAX_CODES' ? 'Kode Pajak' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : 'Info')}
             </span>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -205,7 +207,7 @@ const App: React.FC = () => {
              <button 
                onClick={() => setMoreMenuOpen(!moreMenuOpen)}
                className={`w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center border backdrop-blur-sm ${
-                 moreMenuOpen || ['PPN', 'CALENDAR', 'HISTORY', 'FAQ', 'SIMULATION'].includes(activeTab) 
+                 moreMenuOpen || ['PPN', 'CALENDAR', 'HISTORY', 'FAQ', 'SIMULATION', 'TAX_CODES'].includes(activeTab) 
                  ? 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-slate-900/30' 
                  : 'bg-white/60 text-slate-600 border-white/60 hover:bg-white hover:scale-105 shadow-sm'
                }`}
@@ -245,6 +247,19 @@ const App: React.FC = () => {
                   </button>
 
                   <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-1"></div>
+
+                  <button 
+                    onClick={() => { setActiveTab('TAX_CODES'); setMoreMenuOpen(false); }}
+                    className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'TAX_CODES' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
+                  >
+                    <div className={`p-2 rounded-xl ${activeTab === 'TAX_CODES' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                        <Hash size={18} />
+                    </div>
+                    <div>
+                       <div className="font-bold text-sm">Kode Pajak</div>
+                       <div className={`text-[10px] ${activeTab === 'TAX_CODES' ? 'text-blue-100' : 'text-slate-400'}`}>Direktori KAP & KJS</div>
+                    </div>
+                  </button>
 
                   <button 
                     onClick={() => { setActiveTab('CALENDAR'); setMoreMenuOpen(false); }}
@@ -307,9 +322,10 @@ const App: React.FC = () => {
                  <div className="space-y-2">
                    {renderMobileMenuItem('PPN', 'Kalkulator PPN', 'Pajak Pertambahan Nilai', <Percent size={18} />, 5)}
                    {renderMobileMenuItem('SIMULATION', 'Simulasi Gaji', 'Negosiasi Net ke Gross', <TrendingUp size={18} />, 6)}
-                   {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Deadline & Agenda', <CalendarDays size={18} />, 7)}
-                   {renderMobileMenuItem('HISTORY', 'Riwayat', 'Daftar Perhitungan', <History size={18} />, 8)}
-                   {renderMobileMenuItem('FAQ', 'Panduan & Edukasi', 'Pusat Informasi', <BookOpen size={18} />, 9)}
+                   {renderMobileMenuItem('TAX_CODES', 'Direktori Kode Pajak', 'Cari KAP & KJS', <Hash size={18} />, 7)}
+                   {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Deadline & Agenda', <CalendarDays size={18} />, 8)}
+                   {renderMobileMenuItem('HISTORY', 'Riwayat', 'Daftar Perhitungan', <History size={18} />, 9)}
+                   {renderMobileMenuItem('FAQ', 'Panduan & Edukasi', 'Pusat Informasi', <BookOpen size={18} />, 10)}
                  </div>
                </div>
                
@@ -336,6 +352,7 @@ const App: React.FC = () => {
                   {activeTab === 'NPPN' && 'Kalkulator Pajak Freelancer'}
                   {activeTab === 'SANKSI' && 'Kalkulator Sanksi Pajak'}
                   {activeTab === 'SIMULATION' && 'Simulasi Gaji Net ke Gross'}
+                  {activeTab === 'TAX_CODES' && 'Direktori Kode Pajak (KAP/KJS)'}
                   {activeTab === 'CALENDAR' && 'Kalender Pajak Indonesia'}
                   {activeTab === 'FAQ' && 'Pusat Bantuan & Informasi'}
                   {activeTab === 'HISTORY' && 'Riwayat Perhitungan'}
@@ -350,6 +367,7 @@ const App: React.FC = () => {
                   {activeTab === 'NPPN' && 'Hitung pajak untuk Dokter, Notaris, Freelancer dan Pekerjaan Bebas menggunakan Norma Penghitungan (NPPN).'}
                   {activeTab === 'SANKSI' && 'Cek estimasi denda bunga dan sanksi administrasi akibat keterlambatan setor atau lapor pajak.'}
                   {activeTab === 'SIMULATION' && 'Bingung nego gaji? Hitung berapa Gaji Kotor (Gross) yang harus diminta untuk mendapatkan Gaji Bersih (Net) idaman.'}
+                  {activeTab === 'TAX_CODES' && 'Cari Kode Akun Pajak (KAP) dan Kode Jenis Setoran (KJS) yang tepat untuk pembuatan ID Billing.'}
                   {activeTab === 'CALENDAR' && 'Jangan sampai telat lapor! Cek jadwal jatuh tempo penyetoran dan pelaporan pajak bulan ini.'}
                   {activeTab === 'FAQ' && 'Pelajari istilah perpajakan, cara perhitungan, dan dasar hukum dengan bahasa yang mudah dimengerti.'}
                   {activeTab === 'HISTORY' && 'Akses kembali hasil perhitungan yang telah Anda simpan sebelumnya.'}
@@ -366,6 +384,7 @@ const App: React.FC = () => {
             {activeTab === 'NPPN' && <CalculatorNPPN onContextUpdate={setContextData} />}
             {activeTab === 'SANKSI' && <CalculatorSanksi onContextUpdate={setContextData} />}
             {activeTab === 'SIMULATION' && <SimulatorSalary onContextUpdate={setContextData} />}
+            {activeTab === 'TAX_CODES' && <TaxCodeFinder />}
             {activeTab === 'CALENDAR' && <TaxCalendar />}
             {activeTab === 'FAQ' && <FAQPage />}
             {activeTab === 'HISTORY' && <HistoryPage />}

@@ -44,7 +44,9 @@ import {
   PenTool,
   Siren,
   Target,
-  TrendingUp
+  TrendingUp,
+  Hash,
+  Search
 } from 'lucide-react';
 
 // Custom Sophisticated AI Icon (Admin/Customer Care Persona)
@@ -141,5 +143,7 @@ export {
   PenTool,
   Siren,
   Target,
-  TrendingUp
+  TrendingUp,
+  Hash,
+  Search
 };

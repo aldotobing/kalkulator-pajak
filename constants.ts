@@ -89,3 +89,62 @@ export const SANKSI_TYPES = [
 ];
 
 export const DEFAULT_KMK_RATE = 0.0583; // Approx 5.83% typical reference, user can edit
+
+// Tax Codes Directory (KAP & KJS)
+export interface TaxCodeItem {
+  kap: string;
+  kjs: string;
+  desc: string;
+  category: 'PPH' | 'PPN' | 'FINAL' | 'SANKSI';
+}
+
+export const TAX_CODES: TaxCodeItem[] = [
+  // PPh 21 (411121)
+  { kap: '411121', kjs: '100', desc: 'PPh 21 Masa (Bulanan)', category: 'PPH' },
+  { kap: '411121', kjs: '200', desc: 'PPh 21 Tahunan (SPT Tahunan)', category: 'PPH' },
+  { kap: '411121', kjs: '300', desc: 'STP PPh Pasal 21 (Denda)', category: 'SANKSI' },
+  { kap: '411121', kjs: '401', desc: 'PPh 21 Final (Pesangon/JHT Sekaligus)', category: 'FINAL' },
+  { kap: '411121', kjs: '402', desc: 'PPh 21 Final (Honor Pejabat/PNS APBN/D)', category: 'FINAL' },
+  
+  // PPh 22 (411122)
+  { kap: '411122', kjs: '100', desc: 'PPh 22 Masa (Impor/Badan Usaha)', category: 'PPH' },
+  { kap: '411122', kjs: '900', desc: 'PPh 22 Pemungut Bendaharawan', category: 'PPH' },
+  { kap: '411122', kjs: '300', desc: 'STP PPh Pasal 22', category: 'SANKSI' },
+
+  // PPh 23 (411124)
+  { kap: '411124', kjs: '100', desc: 'PPh 23 Masa (Jasa/Sewa Harta)', category: 'PPH' },
+  { kap: '411124', kjs: '101', desc: 'PPh 23 Dividen', category: 'PPH' },
+  { kap: '411124', kjs: '102', desc: 'PPh 23 Bunga', category: 'PPH' },
+  { kap: '411124', kjs: '103', desc: 'PPh 23 Royalti', category: 'PPH' },
+  { kap: '411124', kjs: '104', desc: 'PPh 23 Hadiah/Penghargaan/Bonus', category: 'PPH' },
+  { kap: '411124', kjs: '300', desc: 'STP PPh Pasal 23', category: 'SANKSI' },
+
+  // PPh 25/29 (Orang Pribadi & Badan)
+  { kap: '411125', kjs: '100', desc: 'PPh 25 Orang Pribadi (Angsuran Bulanan)', category: 'PPH' },
+  { kap: '411125', kjs: '200', desc: 'PPh 29 Orang Pribadi (Kurang Bayar Tahunan)', category: 'PPH' },
+  { kap: '411126', kjs: '100', desc: 'PPh 25 Badan (Angsuran Bulanan)', category: 'PPH' },
+  { kap: '411126', kjs: '200', desc: 'PPh 29 Badan (Kurang Bayar Tahunan)', category: 'PPH' },
+  { kap: '411125', kjs: '300', desc: 'STP PPh Orang Pribadi', category: 'SANKSI' },
+  { kap: '411126', kjs: '300', desc: 'STP PPh Badan', category: 'SANKSI' },
+
+  // PPh Final 4 Ayat 2 (411128)
+  { kap: '411128', kjs: '401', desc: 'PPh Final Bunga Obligasi', category: 'FINAL' },
+  { kap: '411128', kjs: '403', desc: 'PPh Final Sewa Tanah dan/atau Bangunan', category: 'FINAL' },
+  { kap: '411128', kjs: '405', desc: 'PPh Final Hadiah Undian', category: 'FINAL' },
+  { kap: '411128', kjs: '409', desc: 'PPh Final Jasa Konstruksi', category: 'FINAL' },
+  { kap: '411128', kjs: '411', desc: 'PPh Final Pengalihan Hak Tanah/Bangunan', category: 'FINAL' },
+  { kap: '411128', kjs: '417', desc: 'PPh Final Bunga Deposito/Tabungan', category: 'FINAL' },
+  { kap: '411128', kjs: '420', desc: 'PPh Final UMKM (PP 23 / PP 55 Setor Sendiri)', category: 'FINAL' },
+  { kap: '411128', kjs: '423', desc: 'PPh Final UMKM (Pemungutan Pihak Lain)', category: 'FINAL' },
+
+  // PPN (411211)
+  { kap: '411211', kjs: '100', desc: 'PPN Dalam Negeri (Masa)', category: 'PPN' },
+  { kap: '411211', kjs: '101', desc: 'PPN Pemanfaatan JKP/BKP Luar Negeri (Google/Meta Ads)', category: 'PPN' },
+  { kap: '411211', kjs: '102', desc: 'PPN Pemungut Selain Bendaharawan', category: 'PPN' },
+  { kap: '411211', kjs: '300', desc: 'STP PPN Dalam Negeri', category: 'SANKSI' },
+  { kap: '411211', kjs: '900', desc: 'PPN Pemungut Bendaharawan', category: 'PPN' },
+  { kap: '411212', kjs: '100', desc: 'PPN Impor', category: 'PPN' },
+
+  // Sanksi Umum
+  { kap: '411619', kjs: '300', desc: 'Sanksi Administrasi (Bunga/Denda) Umum', category: 'SANKSI' },
+];
