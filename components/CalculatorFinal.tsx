@@ -129,7 +129,7 @@ Sisa Setelah Pajak: ${formatCurrency(netReceived)}
                   className="w-full px-5 py-4 bg-slate-50 border-2 border-transparent hover:bg-white hover:border-slate-200 focus:bg-white focus:border-blue-500 rounded-2xl outline-none transition-all font-semibold text-slate-800 appearance-none cursor-pointer text-sm"
                 >
                   {PPH_FINAL_RATES.map(rate => (
-                      <option key={rate.id} value={rate.id}>{rate.label} ({(rate.rate * 100)}%)</option>
+                      <option key={rate.id} value={rate.id}>{rate.label} ({parseFloat((rate.rate * 100).toFixed(2))}%)</option>
                     ))}
                 </select>
                 <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 no-print"><ArrowRight size={16} className="rotate-90"/></div>
@@ -148,7 +148,9 @@ Sisa Setelah Pajak: ${formatCurrency(netReceived)}
               <div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tarif Final</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl lg:text-6xl font-black tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">{(taxRate * 100).toLocaleString('id-ID')}</span>
+                  <span className="text-5xl lg:text-6xl font-black tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                    {parseFloat((taxRate * 100).toFixed(2)).toLocaleString('id-ID')}
+                  </span>
                   <span className="text-2xl text-slate-400 font-light">%</span>
                 </div>
               </div>

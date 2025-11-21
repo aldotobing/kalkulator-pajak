@@ -90,6 +90,120 @@ export const SANKSI_TYPES = [
 
 export const DEFAULT_KMK_RATE = 0.0583; // Approx 5.83% typical reference, user can edit
 
+// PKB (Pajak Kendaraan Bermotor) Constants (Ref: Perda DKI & Lainnya)
+// Progressive rates map: [1st, 2nd, 3rd, 4th, 5th+]
+export const PKB_PROVINCES = [
+  { 
+    id: 'DKI', 
+    label: 'DKI Jakarta', 
+    rates: [0.02, 0.025, 0.03, 0.04, 0.05],
+    legal: 'Perda Prov. DKI Jakarta No. 2 Tahun 2015'
+  },
+  { 
+    id: 'JABAR', 
+    label: 'Jawa Barat', 
+    rates: [0.0175, 0.0225, 0.0275, 0.0325, 0.0375],
+    legal: 'Perda Prov. Jawa Barat No. 13 Tahun 2011'
+  },
+  { 
+    id: 'JATENG', 
+    label: 'Jawa Tengah', 
+    rates: [0.015, 0.02, 0.025, 0.03, 0.035],
+    legal: 'Perda Prov. Jawa Tengah No. 2 Tahun 2011'
+  },
+  { 
+    id: 'JATIM', 
+    label: 'Jawa Timur', 
+    rates: [0.015, 0.02, 0.025, 0.03, 0.035],
+    legal: 'Perda Prov. Jawa Timur No. 9 Tahun 2010'
+  },
+  { 
+    id: 'BANTEN', 
+    label: 'Banten', 
+    rates: [0.0175, 0.0225, 0.0275, 0.0325, 0.0375],
+    legal: 'Perda Prov. Banten No. 1 Tahun 2011'
+  },
+  { 
+    id: 'BALI', 
+    label: 'Bali', 
+    rates: [0.015, 0.02, 0.025, 0.03, 0.035],
+    legal: 'Perda Prov. Bali No. 1 Tahun 2011'
+  },
+  { 
+    id: 'OTHER', 
+    label: 'Lainnya (Umum)', 
+    rates: [0.015, 0.02, 0.025, 0.03, 0.035],
+    legal: 'Estimasi Tarif Umum Nasional (UU HKPD)'
+  }
+];
+
+export const PKB_PROGRESSIVE_RATES = [
+  { id: 1, label: 'Ke-1' },
+  { id: 2, label: 'Ke-2' },
+  { id: 3, label: 'Ke-3' },
+  { id: 4, label: 'Ke-4' }, 
+  { id: 5, label: 'Ke-5+' },
+];
+
+// Biaya Admin & SWDKLLJ (PP 60/2016 & Jasa Raharja)
+export const PKB_COSTS = {
+  MOTOR: {
+    swdkllj: 35000,
+    admin_stnk: 25000, // Pengesahan Tahunan
+    admin_tnkb: 60000 // 5-Yearly only
+  },
+  MOBIL: {
+    swdkllj: 143000,
+    admin_stnk: 50000, // Pengesahan Tahunan
+    admin_tnkb: 100000 // 5-Yearly only
+  }
+};
+
+// Property Tax (BPHTB & PPh Final)
+export const PROPERTY_TAX_CONFIG = {
+  PPH_RATE: 0.025, // 2.5% Final (Penjual)
+  BPHTB_RATE: 0.05, // 5% (Pembeli)
+  NPOPTKP: {
+    DKI: 80000000, // DKI Jakarta
+    BODETABEK: 60000000, // Common for Bodetabek
+    REGIONAL: 60000000 // Minimum Standard
+  }
+};
+
+// Investment Tax Rates
+export const INVESTMENT_RATES = {
+  CRYPTO: {
+    REGISTERED: { pph: 0.001, ppn: 0.0011 }, // 0.1% + 0.11%
+    UNREGISTERED: { pph: 0.002, ppn: 0.0022 }, // 0.2% + 0.22%
+  },
+  STOCK: {
+    SELL: 0.001 // 0.1% Final on selling
+  },
+  GOLD: {
+    BUY_NPWP: 0.0025, // 0.25%
+    BUY_NON_NPWP: 0.005 // 0.5%
+  },
+  BOND: {
+    COUPON: 0.10 // 10% Final
+  },
+  P2P: {
+    LENDER_NPWP: 0.15, // 15%
+    LENDER_NON_NPWP: 0.30 // 30%
+  }
+};
+
+// Corporate Tax Constants
+export const PPH_BADAN_RATES = {
+  UMKM: 0.005, // 0.5% Final
+  NORMAL: 0.22, // 22% Standard
+  FACILITY_DISCOUNT: 0.50 // 50% Discount for 31E
+};
+
+export const PPH_BADAN_THRESHOLDS = {
+  UMKM_LIMIT: 4800000000, // 4.8 Miliar
+  FACILITY_LIMIT: 50000000000 // 50 Miliar
+};
+
 // Tax Codes Directory (KAP & KJS)
 export interface TaxCodeItem {
   kap: string;

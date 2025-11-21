@@ -13,7 +13,11 @@ import {
   User,
   Briefcase,
   Ship,
-  PenTool
+  PenTool,
+  Car,
+  Home,
+  Bitcoin,
+  Factory
 } from './Icons';
 
 interface FAQItem {
@@ -63,6 +67,39 @@ const faqData: FAQItem[] = [
     officialLink: "https://pajak.go.id/index.php/id/pph-pasal-2126"
   },
   {
+    id: 'pph_badan',
+    title: 'PPh Badan (Pajak Perusahaan)',
+    icon: <Factory size={20} className="text-white" />,
+    colorTheme: 'bg-slate-600',
+    eli5: "Kalau kamu punya PT atau CV, perusahaanmu dianggap orang terpisah (Badan) yang juga harus bayar pajak. Untuk UMKM (omzet < 4.8M), pajaknya super murah cuma 0.5% dari omzet kotor. Tapi kalau sudah besar, pajaknya dihitung 22% dari keuntungan bersih.",
+    howItWorks: "Ada dua skema: Final UMKM (0.5% x Omzet) yang simpel tapi ada batas waktu (3-7 tahun). Setelah itu wajib pakai Tarif Umum (22% x Laba Kena Pajak). Tarif umum punya diskon 50% (Fasilitas 31E) untuk bagian omzet sampai 4.8 Miliar.",
+    formula: "UMKM: 0.5% x Omzet | Umum: 22% x (Laba - Biaya)",
+    legalBasis: "UU HPP (Tarif 22%) & PP 23 Tahun 2018 (UMKM)",
+    officialLink: "https://www.pajak.go.id/id/pph-badan"
+  },
+  {
+    id: 'investasi',
+    title: 'Pajak Investasi (Kripto, Saham, Emas)',
+    icon: <Bitcoin size={20} className="text-white" />,
+    colorTheme: 'bg-yellow-500',
+    eli5: "Kalau kamu untung dari main saham atau kripto, ada pajaknya juga lho. Tapi pajaknya 'Final', artinya langsung dipotong saat transaksi. Khusus kripto, kalau kamu beli di tempat resmi (terdaftar Bappebti) pajaknya jauh lebih murah daripada tempat ilegal.",
+    howItWorks: "Kripto kena PPh (0.1%) + PPN (0.11%) saat transaksi di exchange legal. Saham kena 0.1% saat MENJUAL saja. Emas batangan kena PPh 22 saat membeli (0.25% kalau ada NPWP). Semua ini dipungut oleh platform/penjual.",
+    formula: "Kripto: 0.21% (Legal) | Saham: 0.1% (Jual) | Emas: 0.25% (Beli)",
+    legalBasis: "PMK 68/2022 (Kripto), UU PPh (Saham), PMK 48/2023 (Emas)",
+    officialLink: "https://www.pajak.go.id/id/pajak-kripto"
+  },
+  {
+    id: 'bphtb',
+    title: 'BPHTB (Pajak Jual Beli Rumah)',
+    icon: <Home size={20} className="text-white" />,
+    colorTheme: 'bg-orange-600',
+    eli5: "Kalau kamu beli rumah, kamu harus bayar 'uang administrasi' ke Pemda setempat biar namanya sah jadi milikmu. Di sisi lain, penjual juga harus bayar pajak (PPh) karena dapat uang dari hasil jualan rumah. Jadi dua-duanya kena.",
+    howItWorks: "Pembeli bayar BPHTB (5%) dari harga transaksi dikurangi batas tidak kena pajak (NPOPTKP). Penjual bayar PPh Final (2.5%) dari harga transaksi penuh. Pajak ini wajib lunas sebelum Akta Jual Beli ditandatangani Notaris.",
+    formula: "Pembeli: (Harga - NPOPTKP) x 5% | Penjual: Harga x 2.5%",
+    legalBasis: "UU HKPD No. 1 Tahun 2022 & PP 34 Tahun 2016",
+    officialLink: "https://pajak.go.id/id/pph-atas-pengalihan-hak-atas-tanah-danatau-bangunan"
+  },
+  {
     id: 'nppn',
     title: 'PPh Freelancer (NPPN)',
     icon: <PenTool size={20} className="text-white" />,
@@ -74,10 +111,21 @@ const faqData: FAQItem[] = [
     officialLink: "https://www.pajak.go.id/id/norma-penghitungan-penghasilan-neto"
   },
   {
+    id: 'pkb',
+    title: 'PKB (Pajak Kendaraan Bermotor)',
+    icon: <Car size={20} className="text-white" />,
+    colorTheme: 'bg-indigo-500',
+    eli5: "Setiap tahun kamu harus perpanjang STNK motor/mobilmu. Itu ibarat 'biaya langganan' menggunakan jalan raya. Didalamnya juga ada asuransi (SWDKLLJ) buat jaga-jaga kalau ada kecelakaan. Kalau kamu punya lebih dari 1 kendaraan atas namamu, biayanya makin mahal (Progresif).",
+    howItWorks: "Pajak dihitung dari Nilai Jual (NJKB) yang ditetapkan pemerintah (bukan harga pasar). Tarifnya progresif: Mobil pertama misal 2%, mobil kedua jadi 2.5%. Semakin banyak kendaraan, tarifnya naik.",
+    formula: "(NJKB × Tarif Progresif) + SWDKLLJ + Biaya Admin",
+    legalBasis: "UU HKPD No. 1 Tahun 2022 & Perda Provinsi",
+    officialLink: "https://samsatdigital.id/"
+  },
+  {
     id: 'bea_cukai',
     title: 'Bea Cukai (Pajak Impor)',
     icon: <Ship size={20} className="text-white" />,
-    colorTheme: 'bg-indigo-600',
+    colorTheme: 'bg-sky-600',
     eli5: "Kalau kamu beli barang dari luar negeri (impor), itu seperti 'tamu' yang masuk ke rumah kita. Tamu ini harus bayar tiket masuk (Bea Masuk) dan pajak (PPN/PPh). Tujuannya supaya harga barang impor tidak terlalu murah dan mematikan produk lokal.",
     howItWorks: "Pemerintah memberi keringanan: Jika harga barang di bawah USD 3, bebas Bea Masuk (tapi tetap bayar PPN). Jika di atas USD 3, kena Bea Masuk + PPN. Hati-hati untuk Tas, Sepatu, dan Tekstil tarifnya jauh lebih tinggi untuk melindungi industri dalam negeri.",
     formula: "Nilai CIF (Harga+Ongkir+Asuransi) × Kurs × (Bea Masuk% + PPN% + PPh%)",
@@ -258,7 +306,7 @@ const FAQPage: React.FC = () => {
                          >
                            <span className="flex flex-col items-start">
                              <span>Baca Selengkapnya</span>
-                             <span className="text-[10px] font-normal opacity-70 group-hover:text-blue-100">di Situs Resmi DJP / Bea Cukai</span>
+                             <span className="text-[10px] font-normal opacity-70 group-hover:text-blue-100">di Situs Resmi</span>
                            </span>
                            <div className="bg-white/50 p-1.5 rounded-full group-hover:bg-white/20 transition-colors">
                               <LinkIcon size={14} className="group-hover:translate-x-0.5 transition-transform" />

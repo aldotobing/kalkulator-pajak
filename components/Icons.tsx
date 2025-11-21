@@ -46,7 +46,17 @@ import {
   Target,
   TrendingUp,
   Hash,
-  Search
+  Search,
+  Car,
+  Bike,
+  MapPin,
+  Home,
+  Bitcoin,
+  Coins,
+  Landmark,
+  CreditCard,
+  Factory,
+  PieChart
 } from 'lucide-react';
 
 // Custom Sophisticated AI Icon (Admin/Customer Care Persona)
@@ -145,5 +155,15 @@ export {
   Target,
   TrendingUp,
   Hash,
-  Search
+  Search,
+  Car,
+  Bike,
+  MapPin,
+  Home,
+  Bitcoin,
+  Coins,
+  Landmark,
+  CreditCard,
+  Factory,
+  PieChart
 };

@@ -9,7 +9,11 @@ export enum TaxType {
   NPPN = 'NPPN',
   SANKSI = 'SANKSI',
   SIMULATION = 'SIMULATION',
-  TAX_CODES = 'TAX_CODES'
+  TAX_CODES = 'TAX_CODES',
+  PKB = 'PKB',
+  BPHTB = 'BPHTB',
+  INVESTMENT = 'INVESTMENT',
+  PPH_BADAN = 'PPH_BADAN'
 }
 
 export enum MaritalStatus {
