@@ -1,14 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  Calculator, 
-  Building2, 
-  Percent, 
   Menu,
   X,
-  Gem,
   ChevronRight,
-  History,
   CalendarDays,
   BookOpen,
   Briefcase,
@@ -17,7 +12,11 @@ import {
   ChevronDown,
   PenTool,
   Siren,
-  TrendingUp
+  TrendingUp,
+  Percent,
+  Building2,
+  Gem,
+  History
 } from './components/Icons';
 import CalculatorPPH21 from './components/CalculatorPPH21';
 import CalculatorPPH23 from './components/CalculatorPPH23';
@@ -45,11 +44,29 @@ const App: React.FC = () => {
   const [contextData, setContextData] = useState<string>('');
   const [showNav, setShowNav] = useState(true);
 
+  // Lock Body Scroll when Mobile Menu is Open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      setShowNav(true); // Force nav to show when menu opens
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [mobileMenuOpen]);
+
   // Handle Scroll to Hide/Show Nav
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
     const handleScroll = () => {
+      // CRITICAL FIX: If mobile menu is open, strictly ignore scroll events
+      // This prevents the navbar from hiding while the user scrolls the menu content
+      if (mobileMenuOpen) {
+        setShowNav(true);
+        return;
+      }
+
       const currentScrollY = window.scrollY;
       
       // Always show at the very top
@@ -70,7 +87,7 @@ const App: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [mobileMenuOpen]);
 
   const tabs = [
     { id: 'PPH21', label: 'PPh 21', fullLabel: 'Karyawan & Pribadi', icon: <Briefcase size={18} /> },
@@ -90,9 +107,10 @@ const App: React.FC = () => {
         onClick={() => {
           setActiveTab(id);
           setMobileMenuOpen(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         style={{ transitionDelay: `${delayIndex * 30}ms` }}
-        className={`w-full flex items-center gap-4 p-3 rounded-xl text-left transition-all duration-500 transform ${
+        className={`w-full flex items-center gap-4 p-3 rounded-2xl text-left transition-all duration-500 transform ${
           mobileMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
         } ${
           isActive
@@ -102,7 +120,7 @@ const App: React.FC = () => {
       >
         {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>}
         
-        <div className={`p-2.5 rounded-lg shrink-0 transition-colors ${isActive ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-500 group-hover:bg-white group-hover:text-blue-500 group-hover:shadow-sm'}`}>
+        <div className={`p-2.5 rounded-xl shrink-0 transition-colors ${isActive ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-500 group-hover:bg-white group-hover:text-blue-500 group-hover:shadow-sm'}`}>
            {icon}
         </div>
         
@@ -122,7 +140,7 @@ const App: React.FC = () => {
     
     <div className={`min-h-screen font-sans text-slate-900 relative overflow-x-hidden selection:bg-blue-500 selection:text-white ${isLoading ? 'hidden' : 'block animate-enter'}`}>
       
-      {/* Ambient Background - Updated to Blue/Cyan */}
+      {/* Ambient Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden no-print">
         <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-200/30 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
         <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-cyan-200/30 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
@@ -151,10 +169,10 @@ const App: React.FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as Tab)}
-                  className={`relative h-10 px-4 rounded-full text-xs md:text-sm font-bold transition-all duration-500 flex items-center justify-center gap-2 whitespace-nowrap shrink-0 ${
+                  className={`relative h-10 px-4 rounded-full text-xs md:text-sm font-bold transition-all duration-500 flex items-center justify-center gap-2 whitespace-nowrap shrink-0 leading-none ${
                     activeTab === tab.id
                       ? 'text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4)] shadow-[0_4px_12px_rgba(59,130,246,0.4)]'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/40 border-t border-transparent'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/40 shadow-[inset_0_1px_0_0_transparent]'
                   }`}
                 >
                   {/* Active Tab Liquid Background */}
@@ -163,7 +181,7 @@ const App: React.FC = () => {
                   )}
                   
                   <span className="shrink-0 relative z-10 drop-shadow-sm">{tab.icon}</span>
-                  <span className="relative z-10 drop-shadow-sm leading-none pt-0.5">{tab.label}</span>
+                  <span className="relative z-10 drop-shadow-sm pt-0.5">{tab.label}</span>
                 </button>
               ))}
             </div>
@@ -197,7 +215,7 @@ const App: React.FC = () => {
 
              {/* Dropdown - Glassmorphism */}
              {moreMenuOpen && (
-               <div className="absolute top-full right-0 mt-4 w-64 bg-white/80 backdrop-blur-2xl rounded-[2rem] shadow-2xl shadow-blue-900/20 border border-white/60 p-3 flex flex-col gap-2 animate-enter origin-top-right z-50 ring-1 ring-white/50">
+               <div className="absolute top-full right-0 mt-4 w-64 bg-white/95 backdrop-blur-3xl rounded-[2rem] shadow-2xl shadow-blue-900/20 border border-white/60 p-3 flex flex-col gap-2 animate-enter origin-top-right z-50 ring-1 ring-white/50">
                   <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menu Lainnya</div>
                   
                   <button 
@@ -250,7 +268,7 @@ const App: React.FC = () => {
                     </div>
                     <div>
                        <div className="font-bold text-sm">Riwayat</div>
-                       <div className={`text-[10px] ${activeTab === 'HISTORY' ? 'text-blue-100' : 'text-slate-400'}`}>Log Perhitungan</div>
+                       <div className={`text-[10px] ${activeTab === 'HISTORY' ? 'text-blue-100' : 'text-slate-400'}`}>Daftar Perhitungan</div>
                     </div>
                   </button>
 
@@ -263,7 +281,7 @@ const App: React.FC = () => {
                     </div>
                     <div>
                        <div className="font-bold text-sm">Panduan</div>
-                       <div className={`text-[10px] ${activeTab === 'FAQ' ? 'text-blue-100' : 'text-slate-400'}`}>Pusat Informasi</div>
+                       <div className={`text-[10px] ${activeTab === 'FAQ' ? 'text-blue-100' : 'text-slate-400'}`}>Pusat Edukasi</div>
                     </div>
                   </button>
                </div>
@@ -272,97 +290,91 @@ const App: React.FC = () => {
         </nav>
       </div>
 
-      {/* Mobile Menu Overlay - Liquid Glass */}
-      <div className={`fixed inset-x-4 top-28 bottom-6 z-40 md:hidden transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) origin-top no-print flex flex-col pointer-events-none ${mobileMenuOpen ? 'pointer-events-auto' : ''}`}>
-        <div 
-          className={`bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl shadow-blue-900/20 border border-white/60 p-3 overflow-y-auto max-h-full transition-all duration-500 ring-1 ring-white/50 ${
-            mobileMenuOpen && showNav ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-8 scale-95 pointer-events-none'
-          }`}
-        >
-          <div className="p-4 pb-0">
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 pl-1">Kalkulator Pajak</h3>
-            <div className="space-y-2">
-              {tabs.map((tab, idx) => 
-                renderMobileMenuItem(tab.id as Tab, tab.label, tab.fullLabel, tab.icon, idx)
-              )}
+      {/* MOBILE FULLSCREEN MENU OVERLAY */}
+      <div className={`fixed inset-0 z-40 bg-white/95 backdrop-blur-3xl transition-all duration-500 md:hidden ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        {/* Inner scroll container - Pt-32 ensures content starts below floating nav */}
+        <div className="h-[100dvh] overflow-y-auto pt-32 pb-40 px-6 overscroll-contain">
+            <div className="max-w-md mx-auto space-y-6">
+               <div>
+                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1">Kalkulator Utama</h3>
+                 <div className="space-y-2">
+                   {tabs.map((tab, idx) => renderMobileMenuItem(tab.id as Tab, tab.label, tab.fullLabel, tab.icon, idx))}
+                 </div>
+               </div>
+               
+               <div>
+                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1">Alat Bantu</h3>
+                 <div className="space-y-2">
+                   {renderMobileMenuItem('PPN', 'Kalkulator PPN', 'Pajak Pertambahan Nilai', <Percent size={18} />, 5)}
+                   {renderMobileMenuItem('SIMULATION', 'Simulasi Gaji', 'Negosiasi Net ke Gross', <TrendingUp size={18} />, 6)}
+                   {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Deadline & Agenda', <CalendarDays size={18} />, 7)}
+                   {renderMobileMenuItem('HISTORY', 'Riwayat', 'Daftar Perhitungan', <History size={18} />, 8)}
+                   {renderMobileMenuItem('FAQ', 'Panduan & Edukasi', 'Pusat Informasi', <BookOpen size={18} />, 9)}
+                 </div>
+               </div>
+               
+               <div className="pt-6 text-center">
+                 <p className="text-xs text-slate-400 font-medium">Versi 3.1.0 &bull; PajakKu Pro</p>
+               </div>
             </div>
-          </div>
-
-          <div className="p-4 pt-2">
-            <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mb-6"></div>
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 pl-1">Menu Lainnya</h3>
-            <div className="space-y-2">
-              {renderMobileMenuItem('PPN', 'Kalkulator PPN', 'Pajak Pertambahan Nilai', <Percent size={18} />, 6)}
-              {renderMobileMenuItem('SIMULATION', 'Simulasi Gaji', 'Nego Net ke Gross', <TrendingUp size={18} />, 7)}
-              {renderMobileMenuItem('CALENDAR', 'Kalender Pajak', 'Agenda & Deadline', <CalendarDays size={18} />, 8)}
-              {renderMobileMenuItem('HISTORY', 'Riwayat', 'Log Perhitungan', <History size={18} />, 9)}
-              {renderMobileMenuItem('FAQ', 'Panduan & FAQ', 'Pusat Informasi', <BookOpen size={18} />, 10)}
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-20">
-        
-        {/* Hero Section */}
-        <div key={`hero-${activeTab}`} className="text-center mb-12 animate-enter no-print">
-           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-3 drop-shadow-sm">
-             {activeTab === 'PPH21' && 'Kalkulator PPh 21'}
-             {activeTab === 'NPPN' && 'Kalkulator PPh Freelancer'}
-             {activeTab === 'SANKSI' && 'Kalkulator Sanksi Pajak'}
-             {activeTab === 'PPH23' && 'Kalkulator PPh 23'}
-             {activeTab === 'FINAL' && 'Kalkulator PPh Final'}
-             {activeTab === 'PPN' && 'Kalkulator PPN'}
-             {activeTab === 'PPNBM' && 'Kalkulator PPNBM'}
-             {activeTab === 'BEACUKAI' && 'Bea Masuk & Pajak Impor'}
-             {activeTab === 'SIMULATION' && 'Simulasi Gaji (Reverse Calculator)'}
-             {activeTab === 'CALENDAR' && 'Kalender Pajak Indonesia'}
-             {activeTab === 'FAQ' && 'Pusat Bantuan & Informasi'}
-             {activeTab === 'HISTORY' && 'Riwayat Perhitungan'}
-           </h2>
-           <p className="text-base text-slate-500 max-w-2xl mx-auto leading-relaxed font-medium">
-             {activeTab === 'PPH21' && 'Hitung estimasi pajak penghasilan bersih karyawan dengan presisi tinggi.'}
-             {activeTab === 'NPPN' && 'Hitung pajak penghasilan Pekerja Bebas & Freelancer menggunakan Norma (NPPN).'}
-             {activeTab === 'SANKSI' && 'Hitung denda telat bayar atau lapor pajak sesuai tarif bunga acuan KMK.'}
-             {activeTab === 'PPH23' && 'Perhitungan cepat untuk pajak dividen, royalti, bunga, hadiah, dan jasa.'}
-             {activeTab === 'FINAL' && 'Alat bantu hitung pajak bersifat final seperti sewa tanah & UMKM.'}
-             {activeTab === 'PPN' && 'Kalkulasi Pajak Pertambahan Nilai 11% untuk transaksi bisnis.'}
-             {activeTab === 'PPNBM' && 'Estimasi pajak barang mewah untuk kendaraan dan properti.'}
-             {activeTab === 'BEACUKAI' && 'Estimasi pajak barang kiriman (impor) sesuai PMK 199/2019 & PMK 96/2023.'}
-             {activeTab === 'SIMULATION' && 'Hitung berapa Gaji Kotor (Gross) yang harus Anda minta untuk mendapatkan Gaji Bersih (Net) idaman.'}
-             {activeTab === 'CALENDAR' && 'Pantau tanggal jatuh tempo pelaporan dan pembayaran pajak agar bebas denda.'}
-             {activeTab === 'FAQ' && 'Pelajari jenis-jenis pajak di Indonesia dan cara menggunakan aplikasi.'}
-             {activeTab === 'HISTORY' && 'Akses kembali perhitungan pajak yang telah Anda simpan sebelumnya.'}
-           </p>
-        </div>
+      <main className="pt-32 px-4 pb-32 relative z-10">
+         <div key={activeTab} className="max-w-6xl mx-auto animate-apple-enter will-change-transform">
+            
+            {/* Hero Header (Dynamic based on active tab) */}
+            <div className="text-center mb-8 md:mb-12 no-print">
+               <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2 tracking-tight">
+                  {activeTab === 'PPH21' && 'Kalkulator PPh 21 Karyawan'}
+                  {activeTab === 'PPH23' && 'Kalkulator PPh 23'}
+                  {activeTab === 'FINAL' && 'Kalkulator PPh Final'}
+                  {activeTab === 'PPN' && 'Kalkulator PPN'}
+                  {activeTab === 'PPNBM' && 'Kalkulator PPnBM'}
+                  {activeTab === 'BEACUKAI' && 'Kalkulator Bea Cukai & Impor'}
+                  {activeTab === 'NPPN' && 'Kalkulator Pajak Freelancer'}
+                  {activeTab === 'SANKSI' && 'Kalkulator Sanksi Pajak'}
+                  {activeTab === 'SIMULATION' && 'Simulasi Gaji Net ke Gross'}
+                  {activeTab === 'CALENDAR' && 'Kalender Pajak Indonesia'}
+                  {activeTab === 'FAQ' && 'Pusat Bantuan & Informasi'}
+                  {activeTab === 'HISTORY' && 'Riwayat Perhitungan'}
+               </h1>
+               <p className="text-base text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                  {activeTab === 'PPH21' && 'Hitung estimasi pajak penghasilan (PPh 21) karyawan tetap dengan metode terbaru TER 2024 dan tarif progresif UU HPP.'}
+                  {activeTab === 'PPH23' && 'Hitung potongan pajak atas jasa, sewa harta, dividen, royalti, dan hadiah sesuai tarif Pasal 23.'}
+                  {activeTab === 'FINAL' && 'Hitung pajak bersifat final untuk sewa tanah/bangunan, jasa konstruksi, dan UMKM (PP 23).'}
+                  {activeTab === 'PPN' && 'Hitung Pajak Pertambahan Nilai (PPN) 11% dari Dasar Pengenaan Pajak (DPP).'}
+                  {activeTab === 'PPNBM' && 'Hitung Pajak Penjualan atas Barang Mewah untuk kendaraan, hunian, dan barang eksklusif lainnya.'}
+                  {activeTab === 'BEACUKAI' && 'Estimasi Bea Masuk, PPN, dan PPh Impor untuk barang kiriman luar negeri sesuai PMK 199/2019.'}
+                  {activeTab === 'NPPN' && 'Hitung pajak untuk Dokter, Notaris, Freelancer dan Pekerjaan Bebas menggunakan Norma Penghitungan (NPPN).'}
+                  {activeTab === 'SANKSI' && 'Cek estimasi denda bunga dan sanksi administrasi akibat keterlambatan setor atau lapor pajak.'}
+                  {activeTab === 'SIMULATION' && 'Bingung nego gaji? Hitung berapa Gaji Kotor (Gross) yang harus diminta untuk mendapatkan Gaji Bersih (Net) idaman.'}
+                  {activeTab === 'CALENDAR' && 'Jangan sampai telat lapor! Cek jadwal jatuh tempo penyetoran dan pelaporan pajak bulan ini.'}
+                  {activeTab === 'FAQ' && 'Pelajari istilah perpajakan, cara perhitungan, dan dasar hukum dengan bahasa yang mudah dimengerti.'}
+                  {activeTab === 'HISTORY' && 'Akses kembali hasil perhitungan yang telah Anda simpan sebelumnya.'}
+               </p>
+            </div>
 
-        {/* Main Content */}
-        <div key={`content-${activeTab}`} className="animate-enter">
-          {activeTab === 'PPH21' && <CalculatorPPH21 onContextUpdate={setContextData} />}
-          {activeTab === 'NPPN' && <CalculatorNPPN onContextUpdate={setContextData} />}
-          {activeTab === 'SANKSI' && <CalculatorSanksi onContextUpdate={setContextData} />}
-          {activeTab === 'PPH23' && <CalculatorPPH23 onContextUpdate={setContextData} />}
-          {activeTab === 'FINAL' && <CalculatorFinal onContextUpdate={setContextData} />}
-          {activeTab === 'PPN' && <CalculatorPPN onContextUpdate={setContextData} />}
-          {activeTab === 'PPNBM' && <CalculatorPPNBM onContextUpdate={setContextData} />}
-          {activeTab === 'BEACUKAI' && <CalculatorBeaCukai onContextUpdate={setContextData} />}
-          {activeTab === 'SIMULATION' && <SimulatorSalary onContextUpdate={setContextData} />}
-          {activeTab === 'CALENDAR' && <TaxCalendar />}
-          {activeTab === 'FAQ' && <FAQPage />}
-          {activeTab === 'HISTORY' && <HistoryPage />}
-        </div>
-
+            {/* Content Renderer */}
+            {activeTab === 'PPH21' && <CalculatorPPH21 onContextUpdate={setContextData} />}
+            {activeTab === 'PPH23' && <CalculatorPPH23 onContextUpdate={setContextData} />}
+            {activeTab === 'FINAL' && <CalculatorFinal onContextUpdate={setContextData} />}
+            {activeTab === 'PPN' && <CalculatorPPN onContextUpdate={setContextData} />}
+            {activeTab === 'PPNBM' && <CalculatorPPNBM onContextUpdate={setContextData} />}
+            {activeTab === 'BEACUKAI' && <CalculatorBeaCukai onContextUpdate={setContextData} />}
+            {activeTab === 'NPPN' && <CalculatorNPPN onContextUpdate={setContextData} />}
+            {activeTab === 'SANKSI' && <CalculatorSanksi onContextUpdate={setContextData} />}
+            {activeTab === 'SIMULATION' && <SimulatorSalary onContextUpdate={setContextData} />}
+            {activeTab === 'CALENDAR' && <TaxCalendar />}
+            {activeTab === 'FAQ' && <FAQPage />}
+            {activeTab === 'HISTORY' && <HistoryPage />}
+         </div>
       </main>
-
-      {/* Simple Footer */}
-      <footer className="relative z-10 mt-auto py-8 text-center border-t border-slate-200/50 bg-white/30 backdrop-blur-sm no-print">
-        <p className="text-sm font-medium text-slate-400">
-          © 2025 PajakKu Piro. Hak Cipta Dilindungi.
-        </p>
-      </footer>
-
+      
+      {/* AI Widget */}
       <AIWidget contextData={contextData} />
+
     </div>
     </>
   );

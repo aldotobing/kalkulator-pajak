@@ -44,9 +44,6 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
               {/* Shine effect inside box */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-shimmer"></div>
               <Calculator size={48} className="text-white relative z-10" strokeWidth={1.5} />
-              <div className="absolute -top-1 -right-1">
-                 <Sparkles size={20} className="text-cyan-400 animate-bounce duration-1000" fill="currentColor" />
-              </div>
            </div>
         </div>
 
