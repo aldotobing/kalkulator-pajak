@@ -88,8 +88,7 @@ const CalculatorInvestment: React.FC<Props> = ({ onContextUpdate }) => {
       break;
   }
 
-  const netReceived = amount - taxAmount; // Only relevant for P2P/Bonds/Stock(Sell) where tax is deducted. Crypto/Gold tax is usually added to buy price or deducted from asset. 
-  // For simplification in this general calc: "Total Pajak" is the focus.
+  const netReceived = amount - taxAmount; 
 
   useEffect(() => {
     onContextUpdate(`
@@ -411,7 +410,7 @@ Total Pajak: ${formatCurrency(taxAmount)}
                      <ul className="list-disc list-inside text-sm text-slate-600 space-y-1 font-medium">
                         <li>Dikenakan PPh 22 saat pembelian emas batangan (Antam dsb).</li>
                         <li>Jika punya NPWP tarif 0.25%, jika tidak 0.5%.</li>
-                        <li>Saat penjualan kembali (Buyback) ke badan usaha, kena PPh 22 sebesar 1.5% (jika nilai > 10jt).</li>
+                        <li>Saat penjualan kembali (Buyback) ke badan usaha, kena PPh 22 sebesar 1.5% (jika nilai &gt; 10jt).</li>
                      </ul>
                   )}
 
