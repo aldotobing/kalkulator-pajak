@@ -20,6 +20,7 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
   const [showBadge, setShowBadge] = useState(false);
   const [showTurnstile, setShowTurnstile] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
 
   // Animation Sequence
@@ -52,12 +53,18 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
   const handleTurnstileSuccess = (token: string) => {
     setTurnstileToken(token);
     setIsVerified(true);
+    setHasError(false);
     console.log('Turnstile verification successful');
   };
 
   const handleTurnstileError = () => {
     console.error('Turnstile verification failed');
     setIsVerified(false);
+    setHasError(true);
+  };
+
+  const handleRefresh = () => {
+    window.location.reload();
   };
 
   return (
@@ -109,9 +116,15 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
           <div className="flex flex-col items-center gap-4">
             {/* Security Badge */}
             <div className="flex items-center gap-2 text-slate-400">
-              <Shield size={16} className={`${isVerified ? 'text-green-400' : 'text-slate-400'} transition-colors duration-300`} />
+              <Shield
+                size={16}
+                className={`${isVerified ? 'text-green-400' :
+                  hasError ? 'text-red-400' :
+                    'text-slate-400'
+                  } transition-colors duration-300`}
+              />
               <span className="text-xs font-medium">
-                {isVerified ? 'Verified ✓' : 'Security Check'}
+                {isVerified ? 'Verified' : hasError ? 'Verification Failed ✗' : 'Security Check'}
               </span>
             </div>
 
@@ -136,6 +149,23 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
                 <p className="text-green-400 text-sm font-medium">
                   Verification successful! Loading...
                 </p>
+              </div>
+            )}
+
+            {/* Error State with Refresh Button */}
+            {hasError && !isVerified && (
+              <div className="bg-red-500/10 backdrop-blur-sm px-6 py-4 rounded-2xl border border-red-500/30 shadow-xl">
+                <div className="flex flex-col items-center gap-3">
+                  <p className="text-red-400 text-sm font-medium text-center">
+                    Verification failed. Please try again.
+                  </p>
+                  <button
+                    onClick={handleRefresh}
+                    className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-red-500/50"
+                  >
+                    🔄 Refresh & Retry
+                  </button>
+                </div>
               </div>
             )}
           </div>
