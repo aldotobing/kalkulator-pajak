@@ -235,6 +235,7 @@
       }
 
       /* If a modal is open, hide everything else and maximize modal */
+      body:has(.modal-container) #root,
       body:has(.modal-container)>*:not(.modal-container) {
         display: none !important;
       }

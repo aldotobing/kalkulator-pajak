@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
-import { 
-  ChevronDown, 
-  BookOpen, 
-  Info, 
-  Calculator, 
-  Building2, 
-  Percent, 
+import {
+  ChevronDown,
+  BookOpen,
+  Info,
+  Calculator,
+  Building2,
+  Percent,
   Gem,
   FileText,
   Link as LinkIcon,
@@ -18,7 +18,8 @@ import {
   Home,
   Bitcoin,
   Factory,
-  UserMinus
+  UserMinus,
+  ShieldCheck
 } from './Icons';
 
 interface FAQItem {
@@ -202,15 +203,15 @@ const FAQPage: React.FC = () => {
       {/* Header Card - Compact Version */}
       <div className="bg-slate-900 rounded-3xl p-6 text-white relative overflow-hidden shadow-lg shadow-slate-200/50 flex flex-col md:flex-row items-center gap-5 border border-slate-800">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
-        
+
         <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 shadow-inner shrink-0">
-           <BookOpen size={24} className="text-blue-300" />
+          <ShieldCheck size={24} className="text-blue-300" />
         </div>
-        
+
         <div className="relative z-10 text-center md:text-left">
-          <h2 className="text-lg md:text-xl font-bold mb-1 tracking-tight text-white">Pusat Edukasi Pajak</h2>
+          <h2 className="text-lg md:text-xl font-bold mb-1 tracking-tight text-white">Informasi Aplikasi</h2>
           <p className="text-slate-400 text-sm leading-relaxed max-w-2xl">
-            Penjelasan sederhana mengenai jenis-jenis pajak, dirangkum dari peraturan resmi Indonesia.
+            Privasi & Keamanan Data Terjamin. Aplikasi ini menerapkan pemrosesan data sepenuhnya di sisi klien (Client-Side). Seluruh perhitungan dilakukan secara lokal pada perangkat Anda, memastikan tidak ada informasi pribadi yang dikirim atau disimpan di server eksternal.
           </p>
         </div>
       </div>
@@ -219,15 +220,14 @@ const FAQPage: React.FC = () => {
       <div className="grid grid-cols-1 gap-3">
         {faqData.map((item) => {
           const isOpen = openId === item.id;
-          
+
           return (
-            <div 
+            <div
               key={item.id}
-              className={`bg-white rounded-2xl transition-all duration-300 border overflow-hidden ${
-                isOpen 
-                  ? 'shadow-lg shadow-blue-100/40 border-blue-100 ring-1 ring-blue-50' 
-                  : 'shadow-sm border-slate-100 hover:border-slate-200'
-              }`}
+              className={`bg-white rounded-2xl transition-all duration-300 border overflow-hidden ${isOpen
+                ? 'shadow-lg shadow-blue-100/40 border-blue-100 ring-1 ring-blue-50'
+                : 'shadow-sm border-slate-100 hover:border-slate-200'
+                }`}
             >
               {/* Accordion Header */}
               <button
@@ -251,16 +251,15 @@ const FAQPage: React.FC = () => {
                   <ChevronDown size={16} />
                 </div>
               </button>
-              
+
               {/* Accordion Body */}
-              <div 
-                className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${
-                  isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                }`}
+              <div
+                className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                  }`}
               >
                 <div className="overflow-hidden">
                   <div className="px-5 pb-6 md:px-8 md:pb-8 pt-0 space-y-6">
-                    
+
                     {/* Section 1: ELI5 */}
                     <div className="bg-amber-50/50 rounded-2xl p-5 border border-amber-100/50">
                       <div className="flex items-center gap-2 mb-2">
@@ -285,10 +284,10 @@ const FAQPage: React.FC = () => {
                             {item.howItWorks}
                           </p>
                         </div>
-                        
+
                         <div className="bg-slate-900 rounded-xl p-4 text-white font-sans text-xs md:text-sm shadow-md relative overflow-hidden">
                           <div className="absolute top-0 right-0 p-2 opacity-10">
-                             <Calculator size={32} />
+                            <Calculator size={32} />
                           </div>
                           <div className="text-slate-400 text-[10px] uppercase font-bold mb-1 relative z-10">Rumus Dasar</div>
                           <div className="relative z-10 leading-relaxed font-medium">{item.formula}</div>
@@ -297,33 +296,33 @@ const FAQPage: React.FC = () => {
 
                       {/* Section 3: Legal & Links */}
                       <div className="flex flex-col h-full justify-between">
-                         <div>
-                            <div className="flex items-center gap-2 mb-3 text-slate-900 font-bold uppercase tracking-wider text-[10px]">
-                              <FileText size={14} className="text-blue-500" />
-                              Dasar Hukum
+                        <div>
+                          <div className="flex items-center gap-2 mb-3 text-slate-900 font-bold uppercase tracking-wider text-[10px]">
+                            <FileText size={14} className="text-blue-500" />
+                            Dasar Hukum
+                          </div>
+                          <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
+                            <div className="flex items-start gap-2.5">
+                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0"></div>
+                              <span className="text-xs md:text-sm font-medium text-slate-700">{item.legalBasis}</span>
                             </div>
-                            <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
-                              <div className="flex items-start gap-2.5">
-                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0"></div>
-                                <span className="text-xs md:text-sm font-medium text-slate-700">{item.legalBasis}</span>
-                              </div>
-                            </div>
-                         </div>
+                          </div>
+                        </div>
 
-                         <a 
-                           href={item.officialLink} 
-                           target="_blank" 
-                           rel="noreferrer"
-                           className="mt-4 md:mt-0 flex items-center justify-between w-full p-3 bg-blue-50 border border-blue-100 text-blue-700 rounded-xl hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all group font-bold text-xs md:text-sm"
-                         >
-                           <span className="flex flex-col items-start">
-                             <span>Baca Selengkapnya</span>
-                             <span className="text-[10px] font-normal opacity-70 group-hover:text-blue-100">di Situs Resmi</span>
-                           </span>
-                           <div className="bg-white/50 p-1.5 rounded-full group-hover:bg-white/20 transition-colors">
-                              <LinkIcon size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                           </div>
-                         </a>
+                        <a
+                          href={item.officialLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-4 md:mt-0 flex items-center justify-between w-full p-3 bg-blue-50 border border-blue-100 text-blue-700 rounded-xl hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all group font-bold text-xs md:text-sm"
+                        >
+                          <span className="flex flex-col items-start">
+                            <span>Baca Selengkapnya</span>
+                            <span className="text-[10px] font-normal opacity-70 group-hover:text-blue-100">di Situs Resmi</span>
+                          </span>
+                          <div className="bg-white/50 p-1.5 rounded-full group-hover:bg-white/20 transition-colors">
+                            <LinkIcon size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                          </div>
+                        </a>
                       </div>
                     </div>
 
@@ -337,8 +336,8 @@ const FAQPage: React.FC = () => {
 
       {/* Footer Note */}
       <div className="flex items-center justify-center gap-2 mt-8 text-slate-400 text-xs font-medium bg-white/50 py-2 px-4 rounded-full w-fit mx-auto backdrop-blur-sm border border-slate-100">
-         <Info size={12} />
-         <p>Informasi merujuk pada peraturan perpajakan Indonesia terbaru (UU HPP & PMK).</p>
+        <Info size={12} />
+        <p>Informasi merujuk pada peraturan perpajakan Indonesia terbaru (UU HPP & PMK).</p>
       </div>
     </div>
   );
