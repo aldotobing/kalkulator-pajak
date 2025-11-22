@@ -135,7 +135,7 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
 
             {/* Turnstile Container */}
             {!isVerified && (
-              <div className="bg-slate-800/50 backdrop-blur-sm p-4 rounded-2xl border border-slate-700/50 shadow-xl">
+              <div>
                 <Turnstile
                   siteKey={TURNSTILE_SITE_KEY}
                   onSuccess={handleTurnstileSuccess}
@@ -152,7 +152,7 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
             {isVerified && (
               <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 backdrop-blur-xl px-8 py-4 rounded-3xl border border-green-400/20 shadow-2xl shadow-green-500/10 ring-1 ring-green-400/10">
                 <p className="text-green-400 text-sm font-medium">
-                  Verification successful! Loading...
+                  Verification successful!
                 </p>
               </div>
             )}
@@ -169,8 +169,8 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
                   onClick={handleRefresh}
                   disabled={isRefreshing}
                   className={`group relative p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl transition-all duration-200 shadow-lg ring-1 ring-white/20 ${isRefreshing
-                      ? 'scale-90 opacity-70'
-                      : 'hover:scale-105 hover:shadow-xl active:scale-95'
+                    ? 'scale-90 opacity-70'
+                    : 'hover:scale-105 hover:shadow-xl active:scale-95'
                     }`}
                   aria-label="Refresh and retry verification"
                 >
