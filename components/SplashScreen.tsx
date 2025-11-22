@@ -21,6 +21,7 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
   const [showTurnstile, setShowTurnstile] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
 
   // Animation Sequence
@@ -64,7 +65,11 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
   };
 
   const handleRefresh = () => {
-    window.location.reload();
+    setIsRefreshing(true);
+    // Show pressed effect for 200ms before refreshing
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
   };
 
   return (
@@ -124,7 +129,7 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
                   } transition-colors duration-300`}
               />
               <span className="text-xs font-medium">
-                {isVerified ? 'Verified' : hasError ? 'Verification Failed ✗' : 'Security Check'}
+                {isVerified ? 'Verified' : hasError ? 'Verification Failed' : 'Security Check'}
               </span>
             </div>
 
@@ -145,27 +150,45 @@ export const SplashScreen: React.FC<Props> = ({ onFinish }) => {
 
             {/* Success State */}
             {isVerified && (
-              <div className="bg-green-500/10 backdrop-blur-sm px-6 py-3 rounded-2xl border border-green-500/30 shadow-xl">
+              <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 backdrop-blur-xl px-8 py-4 rounded-3xl border border-green-400/20 shadow-2xl shadow-green-500/10 ring-1 ring-green-400/10">
                 <p className="text-green-400 text-sm font-medium">
                   Verification successful! Loading...
                 </p>
               </div>
             )}
 
-            {/* Error State with Refresh Button */}
+            {/* Error State with Refresh Icon Button */}
             {hasError && !isVerified && (
-              <div className="bg-red-500/10 backdrop-blur-sm px-6 py-4 rounded-2xl border border-red-500/30 shadow-xl">
-                <div className="flex flex-col items-center gap-3">
-                  <p className="text-red-400 text-sm font-medium text-center">
-                    Verification failed. Please try again.
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col gap-1">
+                  <p className="text-slate-300 text-sm font-semibold">
+                    Verification Failed
                   </p>
-                  <button
-                    onClick={handleRefresh}
-                    className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-red-500/50"
-                  >
-                    🔄 Refresh & Retry
-                  </button>
                 </div>
+                <button
+                  onClick={handleRefresh}
+                  disabled={isRefreshing}
+                  className={`group relative p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl transition-all duration-200 shadow-lg ring-1 ring-white/20 ${isRefreshing
+                      ? 'scale-90 opacity-70'
+                      : 'hover:scale-105 hover:shadow-xl active:scale-95'
+                    }`}
+                  aria-label="Refresh and retry verification"
+                >
+                  <svg
+                    className={`w-5 h-5 text-white transition-transform ${isRefreshing ? 'animate-spin' : ''
+                      }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                </button>
               </div>
             )}
           </div>
