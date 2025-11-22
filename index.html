@@ -1,275 +1,306 @@
-
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    
-    <!-- Primary Meta Tags -->
-    <title>Kalkulator Pajak Pro 2025 - Hitung PPh 21, Freelancer & Impor</title>
-    <meta name="title" content="Kalkulator Pajak Pro 2025 - Hitung PPh 21, Freelancer & Impor" />
-    <meta name="description" content="Aplikasi kalkulator pajak terlengkap di Indonesia. Hitung PPh 21 Karyawan (TER 2025), PPh Freelancer (NPPN), Pajak Impor Bea Cukai, PPN, dan Sanksi Denda secara akurat, gratis, dan profesional." />
-    <meta name="keywords" content="kalkulator pajak, pph 21 2025, hitung pajak karyawan, pajak freelancer, nppn, bea cukai, pajak impor, denda telat lapor pajak, pph 23, ppn 11 persen, pajakku piro, simulasi pajak" />
-    <meta name="author" content="PajakKu Piro" />
-    <meta name="theme-color" content="#2563EB" />
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://kalkulator-pajak.pages.dev/" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://kalkulator-pajak.pages.dev/" />
-    <meta property="og:title" content="Kalkulator Pajak Pro - Solusi Pajak Lengkap Indonesia" />
-    <meta property="og:description" content="Hitung pajak PPh 21, Freelancer, Bea Cukai, dan Denda Pajak dalam hitungan detik. Akurat sesuai regulasi UU HPP terbaru." />
-    <meta property="og:image" content="/favicon.svg" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://kalkulator-pajak.pages.dev/" />
-    <meta property="twitter:title" content="Kalkulator Pajak Pro 2025" />
-    <meta property="twitter:description" content="Hitung pajak PPh 21, Freelancer, Bea Cukai, dan Denda Pajak dalam hitungan detik. Gratis dan Profesional." />
-    <meta property="twitter:image" content="/favicon.svg" />
+  <!-- Primary Meta Tags -->
+  <title>Kalkulator Pajak Pro 2025 - Hitung PPh 21, Freelancer & Impor</title>
+  <meta name="title" content="Kalkulator Pajak Pro 2025 - Hitung PPh 21, Freelancer & Impor" />
+  <meta name="description"
+    content="Aplikasi kalkulator pajak terlengkap di Indonesia. Hitung PPh 21 Karyawan (TER 2025), PPh Freelancer (NPPN), Pajak Impor Bea Cukai, PPN, dan Sanksi Denda secara akurat, gratis, dan profesional." />
+  <meta name="keywords"
+    content="kalkulator pajak, pph 21 2025, hitung pajak karyawan, pajak freelancer, nppn, bea cukai, pajak impor, denda telat lapor pajak, pph 23, ppn 11 persen, pajakku piro, simulasi pajak" />
+  <meta name="author" content="PajakKu Piro" />
+  <meta name="theme-color" content="#2563EB" />
 
-    <!-- Favicons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://kalkulator-pajak.pages.dev/" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kalkulator-pajak.pages.dev/" />
+  <meta property="og:title" content="Kalkulator Pajak Pro - Solusi Pajak Lengkap Indonesia" />
+  <meta property="og:description"
+    content="Hitung pajak PPh 21, Freelancer, Bea Cukai, dan Denda Pajak dalam hitungan detik. Akurat sesuai regulasi UU HPP terbaru." />
+  <meta property="og:image" content="/favicon.svg" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://kalkulator-pajak.pages.dev/" />
+  <meta property="twitter:title" content="Kalkulator Pajak Pro 2025" />
+  <meta property="twitter:description"
+    content="Hitung pajak PPh 21, Freelancer, Bea Cukai, dan Denda Pajak dalam hitungan detik. Gratis dan Profesional." />
+  <meta property="twitter:image" content="/favicon.svg" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+          },
+          colors: {
+            pajak: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              900: '#0c4a6e',
             },
-            colors: {
-              pajak: {
-                50: '#f0f9ff',
-                100: '#e0f2fe',
-                500: '#0ea5e9',
-                600: '#0284c7',
-                900: '#0c4a6e',
-              },
+          },
+          animation: {
+            'blob': 'blob 10s infinite',
+            'fade-up': 'fadeUp 0.5s ease-out forwards',
+            'enter': 'enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+            'apple-enter': 'appleEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+            'shimmer': 'shimmer 2s linear infinite',
+            'slide-up-reveal': 'slideUpReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'scale-in': 'scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
             },
-            animation: {
-              'blob': 'blob 10s infinite',
-              'fade-up': 'fadeUp 0.5s ease-out forwards',
-              'enter': 'enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
-              'apple-enter': 'appleEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
-              'shimmer': 'shimmer 2s linear infinite',
-              'slide-up-reveal': 'slideUpReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              'scale-in': 'scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
             },
-            keyframes: {
-              blob: {
-                '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                '100%': { transform: 'translate(0px, 0px) scale(1)' },
-              },
-              fadeUp: {
-                '0%': { opacity: '0', transform: 'translateY(20px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              },
-              enter: {
-                '0%': { opacity: '0', transform: 'translateY(8px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              },
-              appleEnter: {
-                '0%': { opacity: '0', transform: 'translateY(20px) scale(0.96)', filter: 'blur(4px)' },
-                '100%': { opacity: '1', transform: 'translateY(0) scale(1)', filter: 'blur(0px)' },
-              },
-              shimmer: {
-                '0%': { transform: 'translateX(-100%)' },
-                '100%': { transform: 'translateX(100%)' }
-              },
-              slideUpReveal: {
-                '0%': { transform: 'translateY(100%)', opacity: '0' },
-                '100%': { transform: 'translateY(0)', opacity: '1' }
-              },
-              scaleIn: {
-                '0%': { transform: 'scale(0.8)', opacity: '0' },
-                '100%': { transform: 'scale(1)', opacity: '1' }
-              }
+            enter: {
+              '0%': { opacity: '0', transform: 'translateY(8px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            appleEnter: {
+              '0%': { opacity: '0', transform: 'translateY(20px) scale(0.96)', filter: 'blur(4px)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)', filter: 'blur(0px)' },
+            },
+            shimmer: {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(100%)' }
+            },
+            slideUpReveal: {
+              '0%': { transform: 'translateY(100%)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' }
+            },
+            scaleIn: {
+              '0%': { transform: 'scale(0.8)', opacity: '0' },
+              '100%': { transform: 'scale(1)', opacity: '1' }
             }
           }
         }
       }
-    </script>
-    <style>
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FAFAFA;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Glassmorphism utilities */
+    .glass {
+      background: rgba(255, 255, 255, 0.8);
+      /* Slightly more opaque to reduce background noise interference */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .glass-dark {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+    }
+
+    /* Ultra Slim Horizontal Scrollbar (Show on Hover) */
+    .slim-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: transparent transparent;
+    }
+
+    .slim-scrollbar:hover {
+      scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+      /* Blue tint on hover for Firefox */
+    }
+
+    .slim-scrollbar::-webkit-scrollbar {
+      height: 1.5px;
+      /* Extremely thin to prevent layout shift */
+    }
+
+    .slim-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+      margin: 0 16px;
+      /* Keep away from rounded corners */
+    }
+
+    .slim-scrollbar::-webkit-scrollbar-thumb {
+      background: transparent;
+      border-radius: 100vh;
+      transition: background 0.3s;
+    }
+
+    .slim-scrollbar:hover::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.5);
+      /* Stronger blue on hover for visibility */
+    }
+
+    /* Hide Buttons/Arrows */
+    .slim-scrollbar::-webkit-scrollbar-button {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    /* PRINT STYLES */
+    .print-only {
+      display: none;
+    }
+
+    @media print {
+      @page {
+        margin: 0mm;
+        /* Remove browser margins to allow component to control layout */
+        size: auto;
+        /* Auto paper size */
+      }
+
+      /* RESET GLOBAL LAYOUT PADDING FOR PRINT */
+      /* Force block display to break any flex centering from App wrapper */
+      html,
+      body,
+      #root,
+      main {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background-color: white !important;
+        height: auto !important;
+        overflow: visible !important;
+        width: 100% !important;
+      }
+
+      /* Disable all animations during print to prevent layout shifts */
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+      }
+
       body {
-        background-color: #FAFAFA;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      /* Glassmorphism utilities */
-      .glass {
-        background: rgba(255, 255, 255, 0.8); /* Slightly more opaque to reduce background noise interference */
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-      }
-      .glass-dark {
-        background: rgba(15, 23, 42, 0.8);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      
-      /* Custom scrollbar */
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 10px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #e2e8f0;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
-      /* Ultra Slim Horizontal Scrollbar (Show on Hover) */
-      .slim-scrollbar {
-        scrollbar-width: thin;
-        scrollbar-color: transparent transparent;
-      }
-      .slim-scrollbar:hover {
-        scrollbar-color: rgba(59, 130, 246, 0.3) transparent; /* Blue tint on hover for Firefox */
-      }
-      .slim-scrollbar::-webkit-scrollbar {
-        height: 1.5px; /* Extremely thin to prevent layout shift */
-      }
-      .slim-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-        margin: 0 16px; /* Keep away from rounded corners */
-      }
-      .slim-scrollbar::-webkit-scrollbar-thumb {
-        background: transparent;
-        border-radius: 100vh;
-        transition: background 0.3s;
-      }
-      .slim-scrollbar:hover::-webkit-scrollbar-thumb {
-        background: rgba(59, 130, 246, 0.5); /* Stronger blue on hover for visibility */
-      }
-      /* Hide Buttons/Arrows */
-      .slim-scrollbar::-webkit-scrollbar-button {
-        display: none;
-        width: 0;
-        height: 0;
+      .no-print {
+        display: none !important;
       }
 
-      /* PRINT STYLES */
       .print-only {
-        display: none;
+        display: block !important;
       }
 
-      @media print {
-        @page {
-          margin: 0mm; /* Remove browser margins to allow component to control layout */
-          size: auto;  /* Auto paper size */
-        }
-        
-        /* RESET GLOBAL LAYOUT PADDING FOR PRINT */
-        /* Force block display to break any flex centering from App wrapper */
-        html, body, #root, main {
-          display: block !important;
-          padding: 0 !important;
-          margin: 0 !important;
-          background-color: white !important;
-          height: auto !important;
-          overflow: visible !important;
-          width: 100% !important;
-        }
-
-        /* Disable all animations during print to prevent layout shifts */
-        *, *::before, *::after {
-          animation: none !important;
-          transition: none !important;
-          transform: none !important;
-        }
-
-        body {
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
-        }
-
-        .no-print {
-          display: none !important;
-        }
-
-        .print-only {
-          display: block !important;
-        }
-
-        /* If a modal is open, hide everything else and maximize modal */
-        body:has(.modal-container) > *:not(.modal-container) {
-           display: none !important;
-        }
-        
-        body:has(.modal-container) .modal-container {
-           position: absolute !important;
-           inset: 0 !important;
-           padding: 0 !important;
-           background: white !important;
-           z-index: 9999 !important;
-           display: block !important;
-           overflow: visible !important;
-        }
-
-        body:has(.modal-container) .receipt-modal {
-           box-shadow: none !important;
-           max-width: 100% !important;
-           width: 100% !important;
-           max-height: none !important;
-           height: auto !important;
-           border: none !important;
-           margin: 0 !important;
-           padding: 0 !important;
-           overflow: visible !important;
-           background: white !important;
-        }
-        
-        /* Modal Scrollable Content Reset for Print */
-        body:has(.modal-container) .receipt-modal > div {
-           overflow: visible !important;
-           max-height: none !important;
-           padding: 0 !important;
-        }
-
-        /* Clean Inputs for Print */
-        input, textarea, select {
-          background: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-          padding: 0 !important;
-          overflow: hidden !important;
-          resize: none !important;
-        }
-        
-        /* Hide placeholders in print */
-        input::placeholder, textarea::placeholder {
-          color: transparent !important;
-        }
-
-        /* Force layout blocks */
-        .grid {
-          display: grid !important;
-        }
-        
-        /* Specific Overrides for Standard Pages (Not Invoice) */
-        .bg-slate-900:not(.invoice-preview *), 
-        .bg-[#0f172a]:not(.invoice-preview *) {
-          background: white !important;
-          color: black !important;
-          border: 1px solid #e2e8f0 !important;
-        }
+      /* If a modal is open, hide everything else and maximize modal */
+      body:has(.modal-container)>*:not(.modal-container) {
+        display: none !important;
       }
-    </style>
+
+      body:has(.modal-container) .modal-container {
+        position: absolute !important;
+        inset: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        z-index: 9999 !important;
+        display: block !important;
+        overflow: visible !important;
+      }
+
+      body:has(.modal-container) .receipt-modal {
+        box-shadow: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        max-height: none !important;
+        height: auto !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        background: white !important;
+      }
+
+      /* Modal Scrollable Content Reset for Print */
+      body:has(.modal-container) .receipt-modal>div {
+        overflow: visible !important;
+        max-height: none !important;
+        padding: 0 !important;
+      }
+
+      /* Clean Inputs for Print */
+      input,
+      textarea,
+      select {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        resize: none !important;
+      }
+
+      /* Hide placeholders in print */
+      input::placeholder,
+      textarea::placeholder {
+        color: transparent !important;
+      }
+
+      /* Force layout blocks */
+      .grid {
+        display: grid !important;
+      }
+
+      /* Specific Overrides for Standard Pages (Not Invoice) */
+      .bg-slate-900:not(.invoice-preview *),
+      .bg-[#0f172a]:not(.invoice-preview *) {
+        background: white !important;
+        color: black !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -282,10 +313,15 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
+
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>
