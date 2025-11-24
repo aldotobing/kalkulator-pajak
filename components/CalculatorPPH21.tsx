@@ -5,6 +5,7 @@ import { calculatePPh21, formatCurrency } from '../services/taxLogic';
 import { saveHistoryItem } from '../services/historyService';
 import { Banknote, User, Calculator, RefreshCw, Info, Save, Check, Printer, Copy, ChevronDown, Check as CheckIcon, CalendarDays, ShieldCheck, Wallet, Heart } from './Icons';
 import TaxResultModal from './TaxResultModal';
+import PayslipModal from './PayslipModal';
 
 interface Props {
    onContextUpdate: (ctx: string) => void;
@@ -38,6 +39,7 @@ const CalculatorPPH21: React.FC<Props> = ({ onContextUpdate }) => {
    const [showDetail, setShowDetail] = useState(false); // Collapsed by default
    const [isCopied, setIsCopied] = useState(false);
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [isPayslipModalOpen, setIsPayslipModalOpen] = useState(false);
 
    // Local state for input display to handle formatting while typing
    const [displayValues, setDisplayValues] = useState({
@@ -459,6 +461,10 @@ Estimasi Setahun: ${formatCurrency(result.annualTax)}
                      Cetak
                      <Printer size={16} className="group-hover:scale-110 transition-transform" />
                   </button>
+                  <button onClick={() => setIsPayslipModalOpen(true)} className="text-sm font-bold text-slate-500 hover:text-white transition-colors flex items-center gap-2 group">
+                     Slip Gaji
+                     <Banknote size={16} className="group-hover:scale-110 transition-transform" />
+                  </button>
                   <button
                      onClick={handleSave}
                      disabled={isSaved}
@@ -641,6 +647,12 @@ Estimasi Setahun: ${formatCurrency(result.annualTax)}
          <TaxResultModal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
+            result={result}
+            formState={formState}
+         />
+         <PayslipModal
+            isOpen={isPayslipModalOpen}
+            onClose={() => setIsPayslipModalOpen(false)}
             result={result}
             formState={formState}
          />
