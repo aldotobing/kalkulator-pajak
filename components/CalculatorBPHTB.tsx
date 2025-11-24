@@ -162,9 +162,6 @@ ${includeLegalFees ? `Legal & Admin: ${formatCurrency(totalLegalFees)}\n` : ''}T
 
                <div className="mb-8 pr-10">
                   <div className="flex items-center gap-2 mb-2">
-                     <div className="p-2 bg-blue-50 text-blue-600 rounded-lg border border-blue-100">
-                        <Home size={20} />
-                     </div>
                      <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Pajak Rumah (BPHTB)</h2>
                   </div>
                   <div className="text-slate-500 text-sm flex items-center gap-1.5 flex-wrap leading-relaxed">
