@@ -120,6 +120,6 @@ export const generateTaxLetter = async function* (
     }
   } catch (error) {
     console.error("Letter Gen Error:", error);
-    yield "Gagal membuat draft surat. Silakan coba lagi.";
+    yield "Koneksi ke Google Gemmini mengalami masalah. Gagal membuat draft surat. Silakan coba lagi.";
   }
 };
