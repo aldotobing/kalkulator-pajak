@@ -57,9 +57,10 @@ import TaxCalendar from './components/TaxCalendar';
 import { AIWidget } from './components/AIWidget';
 import { SplashScreen } from './components/SplashScreen';
 import TaxPlanner from './components/TaxPlanner';
+import TaxReconciliation from './components/TaxReconciliation';
 
 // Type for Active Tab
-type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'SIMULATION' | 'TAX_CODES' | 'PKB' | 'BPHTB' | 'INVESTMENT' | 'PPH_BADAN' | 'TAX_HEALTH' | 'COMPARISON' | 'INVOICE' | 'CALENDAR' | 'FAQ' | 'HISTORY' | 'PESANGON' | 'LETTER_DRAFTER' | 'PLANNING';
+type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'SIMULATION' | 'TAX_CODES' | 'PKB' | 'BPHTB' | 'INVESTMENT' | 'PPH_BADAN' | 'TAX_HEALTH' | 'COMPARISON' | 'INVOICE' | 'CALENDAR' | 'FAQ' | 'HISTORY' | 'PESANGON' | 'LETTER_DRAFTER' | 'PLANNING' | 'RECONCILIATION';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true); // Splash Screen State
@@ -214,7 +215,7 @@ const App: React.FC = () => {
             {/* Mobile Menu Toggle */}
             <div className="md:hidden flex items-center gap-3 ml-auto pr-2">
               <span className="text-xs font-bold text-blue-600 bg-blue-50/80 backdrop-blur px-3 py-1.5 rounded-full border border-blue-100 shadow-sm truncate max-w-[120px]">
-                {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'LETTER_DRAFTER' ? 'Pembuat Surat' : activeTab === 'INVOICE' ? 'Buat Invoice' : activeTab === 'PESANGON' ? 'Pesangon' : activeTab === 'TAX_HEALTH' ? 'Cek Risiko' : activeTab === 'COMPARISON' ? 'Komparasi Pajak' : activeTab === 'INVESTMENT' ? 'Pajak Investasi' : activeTab === 'PPH_BADAN' ? 'PPh Badan' : activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'SIMULATION' ? 'Simulasi Gaji' : activeTab === 'TAX_CODES' ? 'Kode Pajak' : activeTab === 'PKB' ? 'Pajak Kendaraan' : activeTab === 'BPHTB' ? 'Pajak Rumah' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : activeTab === 'PLANNING' ? 'Perencanaan' : 'Info')}
+                {tabs.find(t => t.id === activeTab)?.label || (activeTab === 'RECONCILIATION' ? 'Rekonsiliasi' : activeTab === 'LETTER_DRAFTER' ? 'Pembuat Surat' : activeTab === 'INVOICE' ? 'Buat Invoice' : activeTab === 'PESANGON' ? 'Pesangon' : activeTab === 'TAX_HEALTH' ? 'Cek Risiko' : activeTab === 'COMPARISON' ? 'Komparasi Pajak' : activeTab === 'INVESTMENT' ? 'Pajak Investasi' : activeTab === 'PPH_BADAN' ? 'PPh Badan' : activeTab === 'PPN' ? 'Kalkulator PPN' : activeTab === 'HISTORY' ? 'Riwayat' : activeTab === 'CALENDAR' ? 'Kalender' : activeTab === 'SIMULATION' ? 'Simulasi Gaji' : activeTab === 'TAX_CODES' ? 'Kode Pajak' : activeTab === 'PKB' ? 'Pajak Kendaraan' : activeTab === 'BPHTB' ? 'Pajak Rumah' : activeTab === 'NPPN' ? 'Freelancer' : activeTab === 'SANKSI' ? 'Sanksi' : activeTab === 'PLANNING' ? 'Perencanaan' : 'Info')}
               </span>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -228,7 +229,7 @@ const App: React.FC = () => {
             <div className="hidden md:flex items-center shrink-0 ml-auto md:ml-0 relative pr-1">
               <button
                 onClick={() => setMoreMenuOpen(!moreMenuOpen)}
-                className={`w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center border backdrop-blur-sm ${moreMenuOpen || ['LETTER_DRAFTER', 'INVOICE', 'PPN', 'CALENDAR', 'HISTORY', 'FAQ', 'SIMULATION', 'TAX_CODES', 'PKB', 'BPHTB', 'INVESTMENT', 'PPH_BADAN', 'TAX_HEALTH', 'COMPARISON', 'PESANGON'].includes(activeTab)
+                className={`w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center border backdrop-blur-sm ${moreMenuOpen || ['RECONCILIATION', 'LETTER_DRAFTER', 'INVOICE', 'PPN', 'CALENDAR', 'HISTORY', 'FAQ', 'SIMULATION', 'TAX_CODES', 'PKB', 'BPHTB', 'INVESTMENT', 'PPH_BADAN', 'TAX_HEALTH', 'COMPARISON', 'PESANGON'].includes(activeTab)
                   ? 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-slate-900/30'
                   : 'bg-white/60 text-slate-600 border-white/60 hover:bg-white hover:scale-105 shadow-sm'
                   }`}
@@ -251,6 +252,19 @@ const App: React.FC = () => {
                     <div>
                       <div className="font-bold text-sm">Perencanaan Pajak</div>
                       <div className={`text-[10px] ${activeTab === 'PLANNING' ? 'text-blue-100' : 'text-slate-400'}`}>Proyeksi & Strategi</div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => { setActiveTab('RECONCILIATION'); setMoreMenuOpen(false); }}
+                    className={`flex items-center gap-3 w-full p-3 rounded-2xl text-left transition-all ${activeTab === 'RECONCILIATION' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'hover:bg-white hover:shadow-sm text-slate-700'}`}
+                  >
+                    <div className={`p-2 rounded-xl ${activeTab === 'RECONCILIATION' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                      <Activity size={18} />
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm">Rekonsiliasi PPh 21</div>
+                      <div className={`text-[10px] ${activeTab === 'RECONCILIATION' ? 'text-blue-100' : 'text-slate-400'}`}>Tracking Pajak Bulanan</div>
                     </div>
                   </button>
 
@@ -527,6 +541,7 @@ const App: React.FC = () => {
                 {activeTab === 'PESANGON' && 'Kalkulator Pajak Pesangon & Pensiun'}
                 {activeTab === 'LETTER_DRAFTER' && 'AI Tax Letter Drafter'}
                 {activeTab === 'PLANNING' && 'Perencanaan Pajak Strategis (Tax Planning)'}
+                {activeTab === 'RECONCILIATION' && 'Rekonsiliasi PPh 21 Bulanan'}
               </h1>
               <p className="text-base text-slate-500 max-w-2xl mx-auto leading-relaxed">
                 {activeTab === 'PPH21' && 'Hitung estimasi pajak penghasilan (PPh 21) karyawan tetap dengan metode terbaru TER 2024 dan tarif progresif UU HPP.'}
@@ -552,6 +567,7 @@ const App: React.FC = () => {
                 {activeTab === 'PESANGON' && 'Hitung PPh Final atas Uang Pesangon, UPMK, UPH dan Manfaat Pensiun/JHT yang dibayarkan sekaligus.'}
                 {activeTab === 'LETTER_DRAFTER' && 'Buat surat resmi perpajakan (Tanggapan SP2DK, Permohonan Angsuran, dll) secara otomatis dengan bahasa birokrasi yang tepat.'}
                 {activeTab === 'PLANNING' && 'Simulasikan proyeksi keuangan 5 tahun ke depan, bandingkan skema pajak (Karyawan vs Freelancer vs UMKM), dan dapatkan rekomendasi strategi penghematan pajak.'}
+                {activeTab === 'RECONCILIATION' && 'Pantau pemotongan PPh 21 sepanjang tahun, bandingkan TER vs kewajiban Pasal 17, dan proyeksikan penyesuaian Desember untuk menghindari kejutan akhir tahun.'}
               </p>
             </div>
 
@@ -576,6 +592,7 @@ const App: React.FC = () => {
             {activeTab === 'PESANGON' && <CalculatorPesangon onContextUpdate={setContextData} />}
             {activeTab === 'LETTER_DRAFTER' && <TaxLetterDrafter onContextUpdate={setContextData} />}
             {activeTab === 'PLANNING' && <TaxPlanner />}
+            {activeTab === 'RECONCILIATION' && <TaxReconciliation onContextUpdate={setContextData} />}
             {activeTab === 'CALENDAR' && <TaxCalendar />}
             {activeTab === 'FAQ' && <FAQPage />}
             {activeTab === 'HISTORY' && <HistoryPage />}
