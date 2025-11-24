@@ -27,7 +27,7 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
 
   const handleSend = async () => {
     if (!input.trim()) return;
-    
+
     const userMsg: ChatMessage = { role: 'user', text: input, timestamp: Date.now() };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
@@ -48,8 +48,8 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
           isFirstChunk = false;
         }
 
-        setMessages(prev => prev.map(msg => 
-          msg.timestamp === modelMsgId 
+        setMessages(prev => prev.map(msg =>
+          msg.timestamp === modelMsgId
             ? { ...msg, text: msg.text + chunk }
             : msg
         ));
@@ -82,10 +82,10 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
   const formatMessage = (text: string) => {
     const lines = text.split('\n');
     let output = '';
-    
+
     lines.forEach((line) => {
       const trimmed = line.trim();
-      
+
       // Skip empty lines
       if (trimmed === '') {
         output += '<div class="h-3"></div>';
@@ -118,26 +118,26 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
         output += `<h3 class="font-bold text-slate-900 mt-4 mb-2 text-base">${content}</h3>`;
         return;
       }
-      
+
       // Lists (- or *)
       if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
-         const content = parseInline(trimmed.substring(2));
-         output += `<div class="flex items-start gap-2.5 ml-1 mb-1.5 group">
+        const content = parseInline(trimmed.substring(2));
+        output += `<div class="flex items-start gap-2.5 ml-1 mb-1.5 group">
             <span class="text-blue-500 mt-1.5 text-[8px] shrink-0">●</span>
             <span class="text-slate-700 leading-relaxed text-sm">${content}</span>
          </div>`;
-         return;
+        return;
       }
 
       // Numbered Lists
       const numMatch = trimmed.match(/^(\d+)\.\s(.*)/);
       if (numMatch) {
-         const content = parseInline(numMatch[2]);
-         output += `<div class="flex items-start gap-2 ml-1 mb-1.5">
+        const content = parseInline(numMatch[2]);
+        output += `<div class="flex items-start gap-2 ml-1 mb-1.5">
             <span class="text-blue-600 font-bold text-xs mt-0.5 shrink-0 min-w-[14px]">${numMatch[1]}.</span>
             <span class="text-slate-700 leading-relaxed text-sm">${content}</span>
          </div>`;
-         return;
+        return;
       }
 
       // Standard Text
@@ -152,29 +152,27 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-8 right-8 z-50 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-blue-500/50 border border-white/20 ${
-          isOpen ? 'bg-slate-900 rotate-90' : 'bg-gradient-to-br from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500'
-        } text-white flex items-center justify-center group`}
+        className={`fixed bottom-8 right-8 z-50 p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-blue-500/50 border border-white/20 ${isOpen ? 'bg-slate-900 rotate-90' : 'bg-gradient-to-br from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500'
+          } text-white flex items-center justify-center group`}
       >
         {isOpen ? <X size={24} /> : <AIIcon size={28} className="group-hover:animate-pulse" />}
       </button>
 
       {/* Chat Window */}
       <div
-        className={`fixed bottom-28 right-8 w-96 max-w-[calc(100vw-2rem)] bg-white rounded-3xl shadow-2xl border border-slate-200 z-40 transition-all duration-300 origin-bottom-right transform ${
-          isOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'
-        } flex flex-col overflow-hidden font-sans`}
+        className={`fixed bottom-28 right-8 w-96 max-w-[calc(100vw-2rem)] bg-white rounded-3xl shadow-2xl border border-slate-200 z-40 transition-all duration-300 origin-bottom-right transform ${isOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'
+          } flex flex-col overflow-hidden font-sans`}
         style={{ height: '600px', maxHeight: '80vh' }}
       >
         {/* Header */}
         <div className="bg-slate-900 p-5 flex items-center justify-between text-white border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="p-1.5 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg shadow-lg shadow-blue-500/20">
-               <AIIcon size={20} className="text-white" />
+              <AIIcon size={20} className="text-white" />
             </div>
             <div>
-               <h3 className="font-bold text-sm leading-tight">Asisten Pajak</h3>
-               <span className="text-xs text-slate-400">Powered by Gemini 2.5</span>
+              <h3 className="font-bold text-sm leading-tight">Asisten Pajak</h3>
+              <span className="text-xs text-slate-400">Powered by Gemini 2.5</span>
             </div>
           </div>
         </div>
@@ -191,17 +189,16 @@ export const AIWidget: React.FC<AIWidgetProps> = ({ contextData }) => {
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[90%] p-4 rounded-2xl text-sm shadow-sm ${
-                    msg.role === 'user'
+                  className={`max-w-[90%] p-4 rounded-2xl text-sm shadow-sm ${msg.role === 'user'
                       ? 'bg-blue-600 text-white rounded-br-sm'
                       : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm'
-                  }`}
+                    }`}
                 >
-                   {msg.role === 'user' ? (
-                     <p className="leading-relaxed">{msg.text}</p>
-                   ) : (
-                     <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.text) }} />
-                   )}
+                  {msg.role === 'user' ? (
+                    <p className="leading-relaxed">{msg.text}</p>
+                  ) : (
+                    <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.text) }} />
+                  )}
                 </div>
               </div>
             );

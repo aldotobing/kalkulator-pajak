@@ -5,7 +5,7 @@ import { GoogleGenAI } from "@google/genai";
 const apiKey = process.env.API_KEY || '';
 
 export const generateTaxAdviceStream = async function* (
-  prompt: string, 
+  prompt: string,
   context: string
 ): AsyncGenerator<string, void, unknown> {
   if (!apiKey) {
@@ -14,7 +14,7 @@ export const generateTaxAdviceStream = async function* (
   }
 
   const ai = new GoogleGenAI({ apiKey });
-  
+
   try {
     const systemInstruction = `You are an expert Indonesian Tax Consultant acting as a warm, friendly, and professional Customer Care agent for 'PajakKu Pro'. 
 
@@ -52,7 +52,7 @@ export const generateTaxAdviceStream = async function* (
     }
   } catch (error) {
     console.error("Gemini Error:", error);
-    yield "Mohon maaf, sepertinya ada sedikit gangguan koneksi saat menghubungi asisten pajak AI. 🙏 Silakan coba lagi sebentar lagi ya.";
+    yield "Mohon maaf, sepertinya ada sedikit gangguan koneksi saat menghubungi asisten pajak AI. 🙏 Silakan coba sebentar lagi ya.";
   }
 };
 
