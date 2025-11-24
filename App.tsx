@@ -26,7 +26,10 @@ import {
   Scale,
   FileText,
   UserMinus,
-  FileSignature
+  FileSignature,
+  Twitter,
+  Github,
+  Heart
 } from './components/Icons';
 import CalculatorPPH21 from './components/CalculatorPPH21';
 import CalculatorPPH23 from './components/CalculatorPPH23';
@@ -190,8 +193,8 @@ const App: React.FC = () => {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as Tab)}
                     className={`relative h-10 px-4 rounded-full text-xs md:text-sm font-bold transition-all duration-500 flex items-center justify-center gap-2 whitespace-nowrap shrink-0 leading-none ${activeTab === tab.id
-                        ? 'text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4)] shadow-[0_4px_12px_rgba(59,130,246,0.4)]'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-white/40 shadow-[inset_0_1px_0_0_transparent]'
+                      ? 'text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4)] shadow-[0_4px_12px_rgba(59,130,246,0.4)]'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/40 shadow-[inset_0_1px_0_0_transparent]'
                       }`}
                   >
                     {/* Active Tab Liquid Background */}
@@ -224,8 +227,8 @@ const App: React.FC = () => {
               <button
                 onClick={() => setMoreMenuOpen(!moreMenuOpen)}
                 className={`w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center border backdrop-blur-sm ${moreMenuOpen || ['LETTER_DRAFTER', 'INVOICE', 'PPN', 'CALENDAR', 'HISTORY', 'FAQ', 'SIMULATION', 'TAX_CODES', 'PKB', 'BPHTB', 'INVESTMENT', 'PPH_BADAN', 'TAX_HEALTH', 'COMPARISON', 'PESANGON'].includes(activeTab)
-                    ? 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-slate-900/30'
-                    : 'bg-white/60 text-slate-600 border-white/60 hover:bg-white hover:scale-105 shadow-sm'
+                  ? 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-slate-900/30'
+                  : 'bg-white/60 text-slate-600 border-white/60 hover:bg-white hover:scale-105 shadow-sm'
                   }`}
               >
                 <ChevronDown size={20} className={`transition-transform duration-300 ${moreMenuOpen ? 'rotate-180' : ''}`} />
@@ -562,6 +565,79 @@ const App: React.FC = () => {
 
         {/* AI Widget */}
         <AIWidget contextData={contextData} />
+
+        {/* Footer */}
+        <footer className="relative z-10 mt-8 pb-8 px-4 no-print">
+          <div className="max-w-6xl mx-auto">
+            <div className="relative overflow-hidden rounded-3xl border border-white/40 bg-gradient-to-br from-white/40 via-white/30 to-white/20 backdrop-blur-3xl backdrop-saturate-150 shadow-xl shadow-blue-900/10 ring-1 ring-white/40 ring-inset p-6">
+
+              {/* Decorative gradient orbs */}
+              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-400/20 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-cyan-400/20 rounded-full blur-3xl"></div>
+
+              <div className="relative flex flex-col md:flex-row items-center justify-between gap-4">
+
+                {/* Left section - Branding & Copyright */}
+                <div className="flex flex-col items-center md:items-start gap-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-black tracking-tight bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                      PajakKu Piro
+                    </span>
+                    <span className="px-2 py-0.5 text-[10px] font-bold bg-blue-500/10 text-blue-600 rounded-full border border-blue-200/50">
+                      v3.5.0
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 text-center md:text-left">
+                    © {new Date().getFullYear()} Kalkulator Pajak Indonesia
+                  </p>
+                </div>
+
+                {/* Center section - Creator */}
+                <div className="flex items-center gap-2 px-3 py-2 bg-white/60 backdrop-blur-sm rounded-xl border border-white/60 shadow-sm">
+                  <Heart size={12} className="text-red-500 fill-red-500 animate-pulse" />
+                  <span className="text-[11px] text-slate-600 font-medium">
+                    Dibuat oleh
+                  </span>
+                  <span className="text-xs font-bold text-slate-800">
+                    Aldo Tobing
+                  </span>
+                </div>
+
+                {/* Right section - Social Links */}
+                <div className="flex items-center gap-2">
+                  <a
+                    href="https://twitter.com/aldo_tobing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Twitter @aldo_tobing"
+                    className="group flex items-center justify-center w-9 h-9 bg-white/80 hover:bg-blue-50 backdrop-blur-sm rounded-xl border border-white/80 hover:border-blue-200 shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    <Twitter size={16} className="text-blue-500 group-hover:scale-110 transition-transform" />
+                  </a>
+
+                  <a
+                    href="https://github.com/aldotobing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub aldotobing"
+                    className="group flex items-center justify-center w-9 h-9 bg-white/80 hover:bg-slate-50 backdrop-blur-sm rounded-xl border border-white/80 hover:border-slate-300 shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    <Github size={16} className="text-slate-700 group-hover:scale-110 transition-transform" />
+                  </a>
+                </div>
+
+              </div>
+
+              {/* Disclaimer */}
+              <div className="mt-4 pt-4 border-t border-slate-200/50">
+                <p className="text-[10px] text-center text-slate-400 leading-relaxed">
+                  <strong className="text-slate-500">Disclaimer:</strong> Perhitungan bersifat estimasi. Konsultasikan dengan konsultan pajak atau DJP untuk keputusan resmi.
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </footer>
 
       </div>
     </>
