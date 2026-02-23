@@ -1,0 +1,65 @@
+# robots.txt for Kalkulator Pajak Pro
+# https://kalkulator-pajak.pages.dev/
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://kalkulator-pajak.pages.dev/sitemap.xml
+
+# Crawl-delay for polite crawling (optional)
+Crawl-delay: 1
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebot
+Allow: /
+
+User-agent: ia_archiver
+Allow: /
+
+# Disallow common paths that shouldn't be indexed
+Disallow: /node_modules/
+Disallow: /src/
+Disallow: /components/
+Disallow: /*.json$
+Disallow: /*.map$
+
+# Allow social media crawlers to access OG images
+User-agent: Twitterbot
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.svg$
+
+User-agent: facebookexternalhit
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.svg$
+
+User-agent: LinkedInBot
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.svg$

@@ -83,6 +83,140 @@ const App: React.FC = () => {
     return () => { document.body.style.overflow = 'unset'; };
   }, [mobileMenuOpen]);
 
+  // Dynamic SEO: Update document title and meta description based on active tab
+  useEffect(() => {
+    const tabMeta: Record<string, { title: string; description: string }> = {
+      PPH21: {
+        title: 'Kalkulator PPh 21 Karyawan 2025 - Hitung Pajak Penghasilan',
+        description: 'Hitung PPh 21 karyawan sesuai tarif TER 2025. Akurat dengan PTKP, BPJS, biaya jabatan. Gratis dan profesional.'
+      },
+      NPPN: {
+        title: 'Kalkulator Pajak Freelancer NPPN 2025 - Pekerja Bebas',
+        description: 'Hitung pajak freelancer dengan NPPN (Norma Penghitungan Penghasilan Neto). Untuk dokter, pengacara, konsultan, dan profesi lainnya.'
+      },
+      SANKSI: {
+        title: 'Kalkulator Sanksi Pajak - Denda Telat Bayar & Lapor SPT',
+        description: 'Hitung denda sanksi pajak telat bayar dan telat lapor. Bunga 2% per bulan, denda SKPKB, dan sanksi administrasi lainnya.'
+      },
+      PPH23: {
+        title: 'Kalkulator PPh 23 - Jasa, Dividen, Royalti, Sewa',
+        description: 'Hitung PPh 23 untuk jasa, dividen, royalti, hadiah, dan sewa harta. Tarif 2% dan 15% sesuai jenis penghasilan.'
+      },
+      FINAL: {
+        title: 'Kalkulator PPh Final - UMKM, Sewa Tanah, Bangunan',
+        description: 'Hitung PPh Final UMKM 0.5%, sewa tanah/bangunan 10%, dan PPh final lainnya. Sesuai PP 23/2018 dan peraturan terbaru.'
+      },
+      PPNBM: {
+        title: 'Kalkulator PPNBM - Pajak Barang Mewah 2025',
+        description: 'Hitung PPNBM untuk mobil mewah, apartemen, yacht, dan barang mewah lainnya. Tarif 10% hingga 95%.'
+      },
+      BEACUKAI: {
+        title: 'Kalkulator Bea Cukai - Pajak Impor Barang Kiriman',
+        description: 'Hitung bea masuk, PPN impor, dan PPh impor untuk barang kiriman dan impor umum. Threshold $3 USD, tarif BM dan PPh sesuai kategori.'
+      },
+      PLANNING: {
+        title: 'Perencanaan Pajak - Proyeksi & Strategi Pajak 2025',
+        description: 'Rencanakan pajak tahunan dengan proyeksi penghasilan dan optimasi PTKP. Strategi pajak efisien untuk karyawan dan bisnis.'
+      },
+      RECONCILIATION: {
+        title: 'Rekonsiliasi PPh 21 - Tracking Pajak Bulanan',
+        description: 'Lakukan rekonsiliasi PPh 21 bulanan. Tracking perbedaan pajak komersial dan fiskal untuk SPT Tahunan.'
+      },
+      LETTER_DRAFTER: {
+        title: 'Pembuat Surat Pajak AI - SP2DK, Permohonan, Keberatan',
+        description: 'Buat surat pajak profesional dengan AI. SP2DK, surat permohonan, keberatan, dan korespondensi DJP lainnya.'
+      },
+      INVOICE: {
+        title: 'Buat Invoice & Faktur Pajak - Generator Invoice',
+        description: 'Generate invoice dan faktur pajak sederhana untuk freelancer dan UMKM. Template profesional siap pakai.'
+      },
+      PESANGON: {
+        title: 'Kalkulator Pesangon & Pensiun - PPh Final PHK',
+        description: 'Hitung pajak pesangon PHK dan manfaat pensiun dengan tarif PPh final. Sesuai PP 68/2009.'
+      },
+      TAX_HEALTH: {
+        title: 'Cek Risiko Pajak - Deteksi SP2DK & Audit',
+        description: 'Analisis risiko pajak dengan benchmark industri. Deteksi potensi SP2DK dan audit dari DJP.'
+      },
+      COMPARISON: {
+        title: 'Komparasi Pajak - Karyawan vs UMKM vs Freelancer',
+        description: 'Bandingkan beban pajak sebagai karyawan, UMKM, dan freelancer. Pilih status pajak paling efisien.'
+      },
+      PPH_BADAN: {
+        title: 'Kalkulator PPh Badan - Pajak Perusahaan PT/CV 2025',
+        description: 'Hitung PPh badan untuk perusahaan. Tarif UMKM 0.5%, normal 22%, dan fasilitas 50% untuk peredaran bruto tertentu.'
+      },
+      INVESTMENT: {
+        title: 'Kalkulator Pajak Investasi - Kripto, Saham, Emas, Obligasi',
+        description: 'Hitung pajak investasi kripto, saham, emas, obligasi, dan P2P lending. Tarif PPh final dan PPN sesuai jenis investasi.'
+      },
+      PPN: {
+        title: 'Kalkulator PPN 11% - Pajak Pertambahan Nilai',
+        description: 'Hitung PPN 11% untuk barang dan jasa kena pajak. Kalkulator PPN inklusif dan eksklusif.'
+      },
+      PKB: {
+        title: 'Kalkulator Pajak Kendaraan - PKB & SWDKLLJ STNK',
+        description: 'Hitung pajak kendaraan bermotor (PKB) dan SWDKLLJ untuk mobil dan motor. Semua provinsi: DKI, Jabar, Jateng, Jatim, Banten, Bali.'
+      },
+      BPHTB: {
+        title: 'Kalkulator BPHTB - Pajak Jual Beli Rumah & Tanah',
+        description: 'Hitung BPHTB 5% dan PPh final 2.5% untuk jual beli properti. NPOPTKP sesuai daerah.'
+      },
+      SIMULATION: {
+        title: 'Simulasi Gaji - Negosiasi Gross to Net Salary',
+        description: 'Simulasi gaji gross ke net dan sebaliknya. Perbandingan take home pay dengan berbagai skema pajak.'
+      },
+      TAX_CODES: {
+        title: 'Kode Pajak KAP & KJS - Direktori Kode Jenis Pajak',
+        description: 'Cari kode KAP dan KJS untuk pembayaran pajak. PPh 21, PPh 23, PPN, dan kode pajak lainnya.'
+      },
+      CALENDAR: {
+        title: 'Kalender Pajak 2025 - Jadwal Lapor & Bayar SPT',
+        description: 'Kalender perpajakan Indonesia 2025. Jadwal batas waktu lapor dan bayar SPT Masa dan Tahunan.'
+      },
+      FAQ: {
+        title: 'FAQ Pajak - Pertanyaan Umum Perpajakan Indonesia',
+        description: 'Jawaban pertanyaan umum tentang PPh 21, PPN, NPWP, SPT, dan perpajakan Indonesia lainnya.'
+      },
+      HISTORY: {
+        title: 'Riwayat Perhitungan - History Kalkulator Pajak',
+        description: 'Lihat riwayat perhitungan pajak Anda. Simpan dan ekspor history kalkulator.'
+      }
+    };
+
+    const meta = tabMeta[activeTab] || {
+      title: 'Kalkulator Pajak Pro 2025 - Hitung PPh 21, Freelancer, Impor & Lainnya',
+      description: 'Kalkulator pajak terlengkap & profesional di Indonesia. Hitung PPh 21, PPh 23, PPN, Bea Cukai, dan lainnya dengan akurat.'
+    };
+
+    document.title = meta.title;
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', meta.description);
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', meta.description);
+    }
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', meta.title);
+    }
+
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle) {
+      twitterTitle.setAttribute('content', meta.title);
+    }
+
+    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDescription) {
+      twitterDescription.setAttribute('content', meta.description);
+    }
+  }, [activeTab]);
+
   // Handle Scroll to Hide/Show Nav
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -183,7 +317,7 @@ const App: React.FC = () => {
             <div className="flex-shrink-0 cursor-pointer select-none group pl-4 relative z-10" onClick={() => setActiveTab('PPH21')}>
               <div className="flex items-center gap-2">
                 <span className="text-base md:text-lg font-black tracking-tight text-slate-800 group-hover:opacity-80 transition-opacity">
-                  PajakKu Piro
+                  Pajakku Pro
                 </span>
               </div>
             </div>
@@ -617,7 +751,7 @@ const App: React.FC = () => {
                 <div className="flex flex-col items-center md:items-start gap-1.5">
                   <div className="flex items-center gap-2">
                     <span className="text-lg font-black tracking-tight bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                      PajakKu Piro
+                      Pajakku Pro
                     </span>
                     <span className="px-2 py-0.5 text-[10px] font-bold bg-blue-500/10 text-blue-600 rounded-full border border-blue-200/50">
                       v3.5.0
