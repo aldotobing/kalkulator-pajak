@@ -63,14 +63,102 @@ import TaxReconciliation from './components/TaxReconciliation';
 type Tab = 'PPH21' | 'PPH23' | 'FINAL' | 'PPN' | 'PPNBM' | 'BEACUKAI' | 'NPPN' | 'SANKSI' | 'SIMULATION' | 'TAX_CODES' | 'PKB' | 'BPHTB' | 'INVESTMENT' | 'PPH_BADAN' | 'TAX_HEALTH' | 'COMPARISON' | 'INVOICE' | 'CALENDAR' | 'FAQ' | 'HISTORY' | 'PESANGON' | 'LETTER_DRAFTER' | 'PLANNING' | 'RECONCILIATION';
 
 const App: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true); // Splash Screen State
+  // Check if user has already seen the splash screen in this session
+  const [isLoading, setIsLoading] = useState(() => {
+    // Only show splash screen on first visit in this browser session
+    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
+    return !hasSeenSplash;
+  }); // Splash Screen State
   const [activeTab, setActiveTab] = useState<Tab>('PPH21');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [contextData, setContextData] = useState<string>('');
   const [showNav, setShowNav] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Note: Safety timeout removed - Turnstile verification now controls the splash screen flow
+  // Map URL params to Tab IDs
+  const paramToTab: Record<string, Tab> = {
+    'pph21': 'PPH21',
+    'pph23': 'PPH23',
+    'final': 'FINAL',
+    'ppn': 'PPN',
+    'ppnbm': 'PPNBM',
+    'beacukai': 'BEACUKAI',
+    'nppn': 'NPPN',
+    'sanksi': 'SANKSI',
+    'simulation': 'SIMULATION',
+    'tax-codes': 'TAX_CODES',
+    'pkb': 'PKB',
+    'bphtb': 'BPHTB',
+    'investment': 'INVESTMENT',
+    'pph-badan': 'PPH_BADAN',
+    'tax-health': 'TAX_HEALTH',
+    'comparison': 'COMPARISON',
+    'invoice': 'INVOICE',
+    'calendar': 'CALENDAR',
+    'faq': 'FAQ',
+    'history': 'HISTORY',
+    'pesangon': 'PESANGON',
+    'letter-drafter': 'LETTER_DRAFTER',
+    'planning': 'PLANNING',
+    'reconciliation': 'RECONCILIATION',
+  };
+
+  // Read URL parameter on mount to set initial tab
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const typeParam = params.get('type');
+    if (typeParam && paramToTab[typeParam.toLowerCase()]) {
+      const tab = paramToTab[typeParam.toLowerCase()];
+      setActiveTab(tab);
+    }
+    // Mark initial load as complete
+    setIsInitialLoad(false);
+  }, []);
+
+  // Update URL when tab changes (without reloading) - skip on initial load
+  useEffect(() => {
+    // Skip URL update on initial load to avoid overwriting the URL param
+    if (isInitialLoad) return;
+
+    const tabToParam: Record<Tab, string> = {
+      PPH21: 'pph21',
+      PPH23: 'pph23',
+      FINAL: 'final',
+      PPN: 'ppn',
+      PPNBM: 'ppnbm',
+      BEACUKAI: 'beacukai',
+      NPPN: 'nppn',
+      SANKSI: 'sanksi',
+      SIMULATION: 'simulation',
+      TAX_CODES: 'tax-codes',
+      PKB: 'pkb',
+      BPHTB: 'bphtb',
+      INVESTMENT: 'investment',
+      PPH_BADAN: 'pph-badan',
+      TAX_HEALTH: 'tax-health',
+      COMPARISON: 'comparison',
+      INVOICE: 'invoice',
+      CALENDAR: 'calendar',
+      FAQ: 'faq',
+      HISTORY: 'history',
+      PESANGON: 'pesangon',
+      LETTER_DRAFTER: 'letter-drafter',
+      PLANNING: 'planning',
+      RECONCILIATION: 'reconciliation',
+    };
+
+    const currentParam = tabToParam[activeTab];
+    const params = new URLSearchParams(window.location.search);
+    
+    if (currentParam && params.get('type') !== currentParam) {
+      params.set('type', currentParam);
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+    } else if (!currentParam && params.get('type')) {
+      params.delete('type');
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+    }
+  }, [activeTab]);
 
   // Lock Body Scroll when Mobile Menu is Open
   useEffect(() => {
@@ -296,7 +384,10 @@ const App: React.FC = () => {
 
   return (
     <>
-      {isLoading && <SplashScreen onFinish={() => setIsLoading(false)} />}
+      {isLoading && <SplashScreen onFinish={() => {
+        sessionStorage.setItem('hasSeenSplash', 'true');
+        setIsLoading(false);
+      }} />}
 
       <div className={`min-h-screen font-sans text-slate-900 relative overflow-x-hidden selection:bg-blue-500 selection:text-white ${isLoading ? 'hidden' : 'block animate-enter'}`}>
 
